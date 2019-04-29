@@ -3,8 +3,7 @@ import { graphql } from 'react-apollo'
 import { NavLink } from 'react-router-dom'
 
 // Queries
-import getUserById from '../../queries/getUserById'
-
+import getUserById from '../../graphql/queries/getUserById'
 
 function MainMenu({ data, sidenav }) {
   const { loading, user } = data
@@ -19,43 +18,44 @@ function MainMenu({ data, sidenav }) {
 
   return (
     <>
-      { currentProgram
-        ? <li><NavLink 
-            className={ sidenav ? 'sidenav-close' : null }
+      {currentProgram ? (
+        <li>
+          <NavLink
+            className={sidenav ? 'sidenav-close' : null}
             to={{
               pathname: '/create/setup',
-              state: { user, programId: currentProgram.id }
+              state: { user, programId: currentProgram.id },
             }}
           >
             Add a new workout to your current program "{currentProgram.name}"
-          </NavLink></li>
-          
-        : <>
-            <li className='subheader'>
-              Looks like you don't have any programs yet.
-            </li>
-            <li><NavLink
-              className={ sidenav ? 'sidenav-close' : null }
+          </NavLink>
+        </li>
+      ) : (
+        <>
+          <li className='subheader'>Looks like you don't have any programs yet.</li>
+          <li>
+            <NavLink
+              className={sidenav ? 'sidenav-close' : null}
               to={{
                 pathname: '/create/setup',
-                state: { user }
+                state: { user },
               }}
             >
               Create a standalone workout?
-            </NavLink></li>
-          </>
-      }
+            </NavLink>
+          </li>
+        </>
+      )}
     </>
   )
 }
-
 
 export default graphql(getUserById, {
   options: props => {
     return {
       variables: {
-        id: props.userId
-      }
+        id: props.userId,
+      },
     }
-  }
+  },
 })(MainMenu)

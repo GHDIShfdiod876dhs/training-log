@@ -8,15 +8,17 @@ import DropdownNotCompleted from './DropdownNotCompleted'
 import DropdownCompleted from './DropdownCompleted'
 import Datepicker from '../../components/Datepicker'
 
-import deleteWorkout from '../../queries/deleteWorkout'
-import getUserById from '../../queries/getUserById'
-import updateWorkoutDate from '../../queries/updateWorkoutDate'
+import deleteWorkout from '../../graphql/mutations/deleteWorkout'
+import getUserById from '../../graphql/queries/getUserById'
+import updateWorkoutDate from '../../graphql/mutations/updateWorkoutDate'
 
-
-function WorkoutScheduled(
-  { workout, deleteWorkout, peers, setPeers, updateWorkoutDate }
-) {
-
+function WorkoutScheduled({
+  workout,
+  deleteWorkout,
+  peers,
+  setPeers,
+  updateWorkoutDate,
+}) {
   //const startOfDayToday = moment(new Date()).startOf('day')
   //const pastWorkout = workout.date < startOfDayToday
   const [date, setDate] = useState(workout.date)
@@ -25,7 +27,7 @@ function WorkoutScheduled(
   const removeWorkout = id => {
     deleteWorkout({
       variables: { id },
-      refetchQueries: [{ query: getUserById }]
+      refetchQueries: [{ query: getUserById }],
     }).then(
       ({ data: { deleteWorkout } }) => {
         console.log('deleted:', deleteWorkout)
@@ -39,9 +41,9 @@ function WorkoutScheduled(
     updateWorkoutDate({
       variables: {
         id,
-        date
+        date,
       },
-      refetchQueries: [{ query: getUserById }]
+      refetchQueries: [{ query: getUserById }],
     }).then(
       res => {
         console.log(res)
@@ -55,48 +57,40 @@ function WorkoutScheduled(
   }
 
   return (
-    <div className="card grey lighten-3" key={workout.id}>
-
+    <div className='card grey lighten-3' key={workout.id}>
       {/* { pastWorkout && !workout.completed &&
         <div className="skipped-set grey-text text-darken-3">
           -- Skipped --
         </div>
       } */}
 
-      <div className="card-content">
-
-        <div className="card-title">
-          { updateDateMode ?
-            <Datepicker
-              inline
-              setDate={ date => changeWorkoutDate(workout.id, date)}
-            /> :
+      <div className='card-content'>
+        <div className='card-title'>
+          {updateDateMode ? (
+            <Datepicker inline setDate={date => changeWorkoutDate(workout.id, date)} />
+          ) : (
             moment(Number(date)).format('LL')
-          }
-          { workout.completed ?
-            <DropdownCompleted workout={workout} /> :
-            <DropdownNotCompleted
-              workout={workout}
-              actions={{ setUpdateDateMode }}
-            />
-          }
+          )}
+          {workout.completed ? (
+            <DropdownCompleted workout={workout} />
+          ) : (
+            <DropdownNotCompleted workout={workout} actions={{ setUpdateDateMode }} />
+          )}
         </div>
 
         <p>{workout.description}</p>
 
         <Workout workoutId={workout.id} />
-
       </div>
 
       <Modal
         actions={{ proceed: () => removeWorkout(workout.id) }}
-        content={
-          `Are you sure you want to delete workout for ${moment(Number(date)).format('LL')}? This cannot be undone.`
-        }
+        content={`Are you sure you want to delete workout for ${moment(
+          Number(date)
+        ).format('LL')}? This cannot be undone.`}
         id={workout.id}
         labels={{ proceed: 'Delete', cancel: 'Cancel' }}
       />
-
     </div>
   )
 }

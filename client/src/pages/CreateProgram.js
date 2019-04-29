@@ -7,25 +7,23 @@ import TextInputField from '../components/TextInputField'
 import TextAreaField from '../components/TextAreaField'
 
 // Queries
-import addProgram from '../queries/addProgram'
-
+import addProgram from '../graphql/mutations/addProgram'
 
 function CreateProgram({ addProgram, userId }) {
   const [name, setName] = useState(null)
   const [description, setDescription] = useState(null)
   const [done, setDone] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault()
     addProgram({
       variables: {
         name,
         description,
         startDate: String(Date.now()),
-        userId
-      }
-    })
-    .then(
+        userId,
+      },
+    }).then(
       () => {
         setDone(true)
       },
@@ -34,33 +32,30 @@ function CreateProgram({ addProgram, userId }) {
   }
 
   if (done) {
-    return <Redirect to='/create'/>
+    return <Redirect to='/create' />
   }
   return (
-    <div className="container">
-      <p>Creating a new program for { userId }</p>
-      <form onSubmit={ handleSubmit }>
-
+    <div className='container'>
+      <p>Creating a new program for {userId}</p>
+      <form onSubmit={handleSubmit}>
         <TextInputField
-          id="program-name"
-          label="Give your new program a name:"
-          onChange={ (e) => setName(e.target.value) }
+          id='program-name'
+          label='Give your new program a name:'
+          onChange={e => setName(e.target.value)}
         />
 
         <TextAreaField
-          id="program-description"
-          label="Describe your new program (optional):"
-          onChange={ (e) => setDescription(e.target.value) }
+          id='program-description'
+          label='Describe your new program (optional):'
+          onChange={e => setDescription(e.target.value)}
         />
 
         <button>Create!</button>
       </form>
-      
-      <button onClick={ () => setDone(true) }>Back</button>
+
+      <button onClick={() => setDone(true)}>Back</button>
     </div>
   )
 }
 
-
-export default withRouter(
-  graphql(addProgram, { name: 'addProgram' })(CreateProgram))
+export default withRouter(graphql(addProgram, { name: 'addProgram' })(CreateProgram))

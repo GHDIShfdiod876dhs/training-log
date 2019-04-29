@@ -6,14 +6,13 @@ import formatLabel from '../../utils/formatInputLabel'
 import NumberInputField from '../../components/NumberInputField'
 
 // Queries
-import getWorkoutById from '../../queries/getWorkoutById'
-import updateConditions from '../../queries/updateConditions';
-
+import getWorkoutById from '../../graphql/queries/getWorkoutById'
+import updateConditions from '../../graphql/mutations/updateConditions'
 
 function reducer(state, action) {
   return {
     ...state,
-    [action.type]: Number(action.value)
+    [action.type]: Number(action.value),
   }
 }
 
@@ -26,63 +25,65 @@ function WorkoutConditions(props) {
   const { conditions } = props.getWorkoutById.workout
   const initialState = conditions
   const [state, dispatch] = useReducer(reducer, initialState)
-  
+
   useEffect(() => {
-    props.getWorkoutById.refetch()
-    .catch(err => console.log(err))
+    props.getWorkoutById.refetch().catch(err => console.log(err))
   }, [])
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault()
-    props.updateConditions({
-      variables: {
-        ...state,
-        workoutId: props.workout.id
-      }
-    })
-    .then(
-      () => {},//props.setConditionsVisible(false),
-      err => console.log(err)
+    props
+      .updateConditions({
+        variables: {
+          ...state,
+          workoutId: props.workout.id,
+        },
+      })
+      .then(
+        () => {}, //props.setConditionsVisible(false),
+        err => console.log(err)
       )
   }
 
   return (
-    <li className="collection-header grey darken-3 white-text">
-      <form className="container" onSubmit={ handleSubmit }>
-
-          { Object.keys(conditions)
-            .filter(name => name[0] !== '_')
-            .map((condition, i) =>
-              <NumberInputField
-                key={i}
-                label={ conditions[condition]
+    <li className='collection-header grey darken-3 white-text'>
+      <form className='container' onSubmit={handleSubmit}>
+        {Object.keys(conditions)
+          .filter(name => name[0] !== '_')
+          .map((condition, i) => (
+            <NumberInputField
+              key={i}
+              label={
+                conditions[condition]
                   ? `${formatLabel(condition)}: ${conditions[condition]}`
                   : formatLabel(condition)
-                }
-                id={condition}
-                onChange={ e => dispatch({
+              }
+              id={condition}
+              onChange={e =>
+                dispatch({
                   type: condition,
-                  value: e.target.value
-                }) }
-              />
-            )
-          }
+                  value: e.target.value,
+                })
+              }
+            />
+          ))}
 
-        <button className="white-text">Save</button>
-
+        <button className='white-text'>Save</button>
       </form>
     </li>
   )
 }
 
 export default compose(
-  graphql(getWorkoutById, { 
+  graphql(getWorkoutById, {
     options: props => {
       return {
         variables: {
-          id: props.workout.id
-        }
+          id: props.workout.id,
+        },
       }
-    }, name: 'getWorkoutById' }),
+    },
+    name: 'getWorkoutById',
+  }),
   graphql(updateConditions, { name: 'updateConditions' })
 )(WorkoutConditions)

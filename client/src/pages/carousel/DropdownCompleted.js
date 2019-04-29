@@ -3,37 +3,32 @@ import { withRouter } from 'react-router-dom'
 import M from 'materialize-css'
 import RepeatWorkout from './RepeatWorkout'
 
-
 export default withRouter(({ workout, history }) => {
   const dropdownId = `dropdown-${workout.id}`
 
-  console.log(workout)
-
   useEffect(() => {
     const dropdownTriggers = document.querySelectorAll('.dropdown-trigger')
-    const instances = M.Dropdown.init(
-      dropdownTriggers,
-      { coverTrigger: false,
-        constrainWidth: false,
-        closeOnClick: false
-      }
-    )
+    const instances = M.Dropdown.init(dropdownTriggers, {
+      coverTrigger: false,
+      constrainWidth: false,
+      closeOnClick: false,
+    })
     return () => instances.forEach(i => i.destroy())
   }, [])
 
   return (
     <>
-      <i 
-        className="dropdown-trigger material-icons secondary-content green-text"
+      <i
+        className='dropdown-trigger material-icons secondary-content green-text'
         data-target={dropdownId}
       >
         check
-      </i> 
+      </i>
 
-      <ul id={dropdownId} className="dropdown-content grey-text">
+      <ul id={dropdownId} className='dropdown-content grey-text'>
         <RepeatWorkout workout={workout} history={history} />
 
-        <li className="divider" tabIndex="-1"></li>
+        <li className='divider' tabIndex='-1' />
         <li>Save as template</li>
       </ul>
     </>

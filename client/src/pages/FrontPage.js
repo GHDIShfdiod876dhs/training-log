@@ -5,28 +5,26 @@ import { graphql } from 'react-apollo'
 import TodaysWorkout from './TodaysWorkout'
 
 // Queries
-import getUserById from '../queries/getUserById'
-
+import getUserById from '../graphql/queries/getUserById'
 
 function FrontPage({ data: { loading, user } }) {
   if (loading) {
-    return ( <div>Loading...</div> )
+    return <div>Loading...</div>
   }
 
   return (
-    <div className="container">
-      <TodaysWorkout workouts={ user.workouts } />
+    <div className='container'>
+      <TodaysWorkout workouts={user.workouts} />
     </div>
   )
 }
-
 
 export default graphql(getUserById, {
   options: props => {
     return {
       variables: {
-        id: props.userId
-      }
+        id: props.userId,
+      },
     }
-  }
+  },
 })(FrontPage)

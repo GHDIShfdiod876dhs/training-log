@@ -9,9 +9,8 @@ import TextAreaField from '../components/TextAreaField'
 import ModalButton from '../components/ModalButton'
 
 // Queries
-import addExerciseMutation from '../queries/addExercise'
-import getExercisesForUser from '../queries/getExercisesForUser'
-
+import addExerciseMutation from '../graphql/mutations/addExercise'
+import getExercisesForUser from '../graphql/queries/getExercisesForUser'
 
 function CreateExercise(props) {
   const [name, setName] = useState(null)
@@ -20,78 +19,73 @@ function CreateExercise(props) {
 
   const [done, setDone] = useState(false)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault()
-    props.addExercise({
-      variables: {
-        name,
-        description,
-        userId: props.userId
-      },
-      refetchQueries: [{ query: getExercisesForUser }]
-    })
-    .then(
-      res => {
-        setNewExercise(res.data.addExercise)
-      },
-      err => console.log(err)
-    )
+    props
+      .addExercise({
+        variables: {
+          name,
+          description,
+          userId: props.userId,
+        },
+        refetchQueries: [{ query: getExercisesForUser }],
+      })
+      .then(
+        res => {
+          setNewExercise(res.data.addExercise)
+        },
+        err => console.log(err)
+      )
   }
 
   if (done) {
     props.history.goBack()
     return null
-  }
-  
-  else if (!newExercise) {
+  } else if (!newExercise) {
     return (
       <>
-        <form className="container" onSubmit={ handleSubmit }>
-
+        <form className='container' onSubmit={handleSubmit}>
           <TextInputField
-            id="exercise-name"
-            label="Name"
-            onChange={ (e) => setName(e.target.value) }
+            id='exercise-name'
+            label='Name'
+            onChange={e => setName(e.target.value)}
           />
 
           <TextAreaField
-            id="exercise-description"
-            label="Description (optional)"
-            onChange={ (e) => setDescription(e.target.value) }
+            id='exercise-description'
+            label='Description (optional)'
+            onChange={e => setDescription(e.target.value)}
           />
 
           <button>Save</button>
-
         </form>
 
-        <button onClick={ () => setDone(true) }>Cancel</button>
+        <button onClick={() => setDone(true)}>Cancel</button>
       </>
     )
   } else {
     return (
       <>
         <div>
-          <p>Would you like to add custom fields to "{ name }"?</p>
-          <button onClick={ () =>
-              props.history.push(`/customize_exercise/${newExercise.id}`)
-            }
+          <p>Would you like to add custom fields to "{name}"?</p>
+          <button
+            onClick={() => props.history.push(`/customize_exercise/${newExercise.id}`)}
           >
             Yes
           </button>
-          <button onClick={ () => setDone(true) }>
-            No
-          </button>
+          <button onClick={() => setDone(true)}>No</button>
         </div>
 
         <ModalButton
           buttonText="What's this?"
-          content={ <WhatAreCustomExerciseFields /> }
-          name="WhatAreCustomExerciseFields?"
+          content={<WhatAreCustomExerciseFields />}
+          name='WhatAreCustomExerciseFields?'
         />
       </>
     )
   }
 }
 
-
-export default withRouter(graphql(addExerciseMutation, { name: 'addExercise' })(CreateExercise))
+export default withRouter(
+  graphql(addExerciseMutation, { name: 'addExercise' })(CreateExercise)
+)

@@ -7,12 +7,11 @@ import Datepicker from '../components/Datepicker'
 import TextAreaField from '../components/TextAreaField'
 
 // Queries
-import addWorkoutToProgram from '../queries/addWorkoutToProgram'
-import addWorkoutToUser from '../queries/addWorkoutToUser'
+import addWorkoutToProgram from '../graphql/mutations/addWorkoutToProgram'
+import addWorkoutToUser from '../graphql/mutations/addWorkoutToUser'
 
 // Contexts
 import UserContext from '../contexts/UserContext'
-
 
 function SetupWorkout(props) {
   const userId = useContext(UserContext)
@@ -25,79 +24,72 @@ function SetupWorkout(props) {
 
   //console.log(props)
 
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     if (props.programId) {
       e.preventDefault()
-      props.addWorkoutToProgram({
-        variables: {
-          date,
-          description,
-          programId: props.programId
-        }
-      })
-      .then(
-        ({ data }) => {
+      props
+        .addWorkoutToProgram({
+          variables: {
+            date,
+            description,
+            programId: props.programId,
+          },
+        })
+        .then(({ data }) => {
           setWorkout(data.addWorkoutToProgram)
-        },
-        handleAsyncErr
-      )
-    }
-    else {
+        }, handleAsyncErr)
+    } else {
       e.preventDefault()
-      props.addWorkoutToUser({
-        variables: {
-          date,
-          description,
-          userId
-        }
-      })
-      .then(
-        ({ data }) => {
+      props
+        .addWorkoutToUser({
+          variables: {
+            date,
+            description,
+            userId,
+          },
+        })
+        .then(({ data }) => {
           setWorkout(data.addWorkoutToUser)
-        },
-        handleAsyncErr
-      )
+        }, handleAsyncErr)
     }
   }
 
   if (canceled) {
-    return <Redirect to="/create"/>
-  }
-  else if (workout) {
+    return <Redirect to='/create' />
+  } else if (workout) {
     return (
-      <Redirect to={{
-        pathname: `/create/workout/${workout.id}`,
-        state: { userId, workout }
-      }} />
+      <Redirect
+        to={{
+          pathname: `/create/workout/${workout.id}`,
+          state: { userId, workout },
+        }}
+      />
     )
   }
   return (
-    <div className="container">
-      <form className="container" onSubmit={ handleSubmit }>
+    <div className='container'>
+      <form className='container' onSubmit={handleSubmit}>
         <p>{props.programId}</p>
 
-        <Datepicker
-          id="date"
-          label="Date (defaults to today)"
-          setDate={ setDate }
-        />
+        <Datepicker id='date' label='Date (defaults to today)' setDate={setDate} />
 
         <TextAreaField
-          id="workout-description"
-          label="Description (optional)"
-          onChange={ (e) => setDescription(e.target.value) }
+          id='workout-description'
+          label='Description (optional)'
+          onChange={e => setDescription(e.target.value)}
         />
 
         <button>Let's Go!</button>
       </form>
 
-      <button onClick={ () => setCanceled(true) }>Cancel</button>
+      <button onClick={() => setCanceled(true)}>Cancel</button>
     </div>
   )
 }
 
-
-export default withRouter(compose(
-  graphql(addWorkoutToProgram, { name: 'addWorkoutToProgram'}),
-  graphql(addWorkoutToUser, { name: 'addWorkoutToUser'})
-)(SetupWorkout))
+export default withRouter(
+  compose(
+    graphql(addWorkoutToProgram, { name: 'addWorkoutToProgram' }),
+    graphql(addWorkoutToUser, { name: 'addWorkoutToUser' })
+  )(SetupWorkout)
+)

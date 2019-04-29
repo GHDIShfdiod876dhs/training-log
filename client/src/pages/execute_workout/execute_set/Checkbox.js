@@ -1,7 +1,7 @@
 import React from 'react'
 import { graphql } from 'react-apollo'
-import updateSetCompletion from '../../../queries/updateSetCompletion'
 
+import updateSetCompletion from '../../../graphql/mutations/updateSetCompletion'
 
 const checkboxStyles = {
   width: '1.5rem',
@@ -23,7 +23,7 @@ const checkmarkStyles = {
   fontSize: '3rem',
   position: 'relative',
   top: '-1.25rem',
-  left: '-0.5rem'
+  left: '-0.5rem',
 }
 
 const Checkbox = ({ set, completed, setCompleted, updateSetCompletion }) => {
@@ -33,34 +33,24 @@ const Checkbox = ({ set, completed, setCompleted, updateSetCompletion }) => {
     updateSetCompletion({
       variables: {
         id,
-        completed: !completed
-      }
-    })
-    .then(
-      () => setCompleted(!completed),
-      err => console.log(err)
-    )
+        completed: !completed,
+      },
+    }).then(() => setCompleted(!completed), err => console.log(err))
   }
-  
+
   return (
     <div
-      className="checkbox z-depth-2"
+      className='checkbox z-depth-2'
       onClick={handleClick}
-      style={ completed ? checkedStyles : uncheckedStyles}
+      style={completed ? checkedStyles : uncheckedStyles}
     >
-      { completed &&
-        <i
-          className="material-icons green-text medium"
-          style={checkmarkStyles}
-        >
+      {completed && (
+        <i className='material-icons green-text medium' style={checkmarkStyles}>
           check
         </i>
-      }
+      )}
     </div>
   )
 }
 
-
-export default graphql(
-  updateSetCompletion, { name: 'updateSetCompletion' }
-)(Checkbox)
+export default graphql(updateSetCompletion, { name: 'updateSetCompletion' })(Checkbox)
