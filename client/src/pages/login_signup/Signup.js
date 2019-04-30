@@ -19,53 +19,50 @@ export default withApollo(({ client }) => {
   if (loggedIn) return <Redirect to='./' />
 
   return (
-    <div className='container'>
-      <Mutation mutation={SIGNUP_USER}>
-        {(signupUser, { data }) => (
-          <div>
-            <form
-              onSubmit={async e => {
-                e.preventDefault()
-                await signupUser({
-                  variables: {
-                    email: emailInput.value,
-                    name: nameInput.value,
-                    password: passwordInput.value,
-                  },
-                  update: (store, { data: { signupUser } }) => {
-                    store.USER_ID = signupUser.id
-                    store.USER_TOKEN = signupUser.token
-                  },
-                })
-                emailInput.value = ''
-                nameInput.value = ''
-                passwordInput.value = ''
+    <Mutation mutation={SIGNUP_USER}>
+      {(signupUser, { data }) => (
+        <form
+          className='container'
+          onSubmit={e => {
+            e.preventDefault()
+            signupUser({
+              variables: {
+                email: emailInput.value,
+                name: nameInput.value,
+                password: passwordInput.value,
+              },
+            }).then(
+              ({ data: { signupUser } }) => {
+                emailInput.value = nameInput.value = passwordInput.value = null
+                localStorage.setItem('id', signupUser.id)
+                localStorage.setItem('token', signupUser.token)
                 setLoggedIn(true)
-              }}
-            >
-              <input
-                placeholder='email'
-                ref={node => {
-                  emailInput = node
-                }}
-              />
-              <input
-                placeholder='name'
-                ref={node => {
-                  nameInput = node
-                }}
-              />
-              <input
-                placeholder='password'
-                ref={node => {
-                  passwordInput = node
-                }}
-              />
-              <button type='submit'>Sign up</button>
-            </form>
-          </div>
-        )}
-      </Mutation>
-    </div>
+              },
+              err => console.log(err)
+            )
+          }}
+        >
+          <input
+            placeholder='email'
+            ref={node => {
+              emailInput = node
+            }}
+          />
+          <input
+            placeholder='name'
+            ref={node => {
+              nameInput = node
+            }}
+          />
+          <input
+            placeholder='password'
+            ref={node => {
+              passwordInput = node
+            }}
+          />
+          <button type='submit'>Sign up</button>
+        </form>
+      )}
+    </Mutation>
   )
 })

@@ -7,11 +7,11 @@ export const workoutFieldsFragment = gql`
     id
     date
     description
-    userDefinedData {
-      id
-      name
-      datum
-    }
+    # userDefinedData {
+    #   id
+    #   name
+    #   datum
+    # }
     conditions {
       ...conditionsFields
     }
@@ -19,8 +19,14 @@ export const workoutFieldsFragment = gql`
       ...setFields
     }
     completed
-    programId
-    userId
+    # programId
+    # userId
+    program {
+      id
+    }
+    user {
+      id
+    }
   }
   ${conditionsFieldsFragment}
   ${setFieldsFragment}

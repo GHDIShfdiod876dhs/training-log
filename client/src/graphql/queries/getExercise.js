@@ -5,10 +5,10 @@ export const exerciseFieldsFragment = gql`
     id
     name
     description
-    customFields {
-      id
-      name
-    }
+    # customFields {
+    #   id
+    #   name
+    # }
   }
 `
 

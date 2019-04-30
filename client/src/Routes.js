@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { Route } from 'react-router-dom'
 
 // Components
-import FrontPage from './pages/FrontPage'
+import FrontPage from './pages/FrontPage(graphcool)'
 import ExecuteWorkout from './pages/execute_workout/ExecuteWorkout'
 import CreateProgram from './pages/CreateProgram'
 import SetupWorkout from './pages/SetupWorkout'

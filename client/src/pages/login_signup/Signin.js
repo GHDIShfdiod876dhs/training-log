@@ -22,42 +22,41 @@ export default withApollo(({ client }) => {
     <div className='container'>
       <Mutation mutation={AUTHENTICATE_USER}>
         {(authenticateUser, { data }) => (
-          <div>
-            <form
-              onSubmit={async e => {
-                e.preventDefault()
-                await authenticateUser({
-                  variables: {
-                    email: emailInput.value,
-                    password: passwordInput.value,
-                  },
-                  update: (store, { data: { authenticateUser } }) => {
-                    store.USER_ID = authenticateUser.id
-                    store.USER_TOKEN = authenticateUser.token
-                  },
-                })
-                emailInput.value = ''
-                passwordInput.value = ''
-                setLoggedIn(true)
+          <form
+            onSubmit={e => {
+              e.preventDefault()
+              authenticateUser({
+                variables: {
+                  email: emailInput.value,
+                  password: passwordInput.value,
+                },
+              }).then(
+                ({ data: { authenticateUser } }) => {
+                  emailInput.value = passwordInput.value = null
+                  localStorage.setItem('id', authenticateUser.id)
+                  localStorage.setItem('token', authenticateUser.token)
+                  setLoggedIn(true)
+                },
+                err => console.log(err)
+              )
+            }}
+          >
+            <input
+              placeholder='email'
+              ref={node => {
+                emailInput = node
               }}
-            >
-              <input
-                placeholder='email'
-                ref={node => {
-                  emailInput = node
-                }}
-              />
-              <input
-                placeholder='password'
-                ref={node => {
-                  passwordInput = node
-                }}
-              />
-              <button className='btn-flat' type='submit'>
-                Sign in
-              </button>
-            </form>
-          </div>
+            />
+            <input
+              placeholder='password'
+              ref={node => {
+                passwordInput = node
+              }}
+            />
+            <button className='btn-flat' type='submit'>
+              Sign in
+            </button>
+          </form>
         )}
       </Mutation>
       <p>

@@ -1,61 +1,48 @@
-import React, { useEffect } from 'react'
-import { graphql } from 'react-apollo'
+import React from 'react'
+import { Query } from 'react-apollo'
 import { NavLink } from 'react-router-dom'
 
-// Queries
-import getUserById from '../../graphql/queries/getUserById'
+import GET_USER_QUERY from '../../graphql/queries/getUserById'
 
-function MainMenu({ data, sidenav }) {
-  const { loading, user } = data
-
-  if (loading) return <div>Loading...</div>
-
-  useEffect(() => {
-    data.refetch()
-  }, [])
-
-  const currentProgram = user.programs[user.programs.length - 1]
-
+export default ({ sidenav }) => {
+  const id = localStorage.getItem('id')
+  if (!id) return null
   return (
-    <>
-      {currentProgram ? (
-        <li>
-          <NavLink
-            className={sidenav ? 'sidenav-close' : null}
-            to={{
-              pathname: '/create/setup',
-              state: { user, programId: currentProgram.id },
-            }}
-          >
-            Add a new workout to your current program "{currentProgram.name}"
-          </NavLink>
-        </li>
-      ) : (
-        <>
-          <li className='subheader'>Looks like you don't have any programs yet.</li>
-          <li>
-            <NavLink
-              className={sidenav ? 'sidenav-close' : null}
-              to={{
-                pathname: '/create/setup',
-                state: { user },
-              }}
-            >
-              Create a standalone workout?
-            </NavLink>
-          </li>
-        </>
-      )}
-    </>
+    <Query query={GET_USER_QUERY} variables={{ id }}>
+      {({ loading, data: { User } }) => {
+        if (loading) return <span>loading....</span>
+        if (!User) return null
+        const currentProgram = User.programs[User.programs.length - 1]
+
+        return currentProgram ? (
+          renderLink(
+            sidenav,
+            `Add a new workout to your current program "${currentProgram.name}"`,
+            { User, programId: currentProgram.id }
+          )
+        ) : (
+          <>
+            <li className='subheader'>Looks like you don't have any programs yet.</li>
+            {renderLink(sidenav, 'Create a standalone workout?', { User })}
+          </>
+        )
+      }}
+    </Query>
   )
 }
 
-export default graphql(getUserById, {
-  options: props => {
-    return {
-      variables: {
-        id: props.userId,
-      },
-    }
-  },
-})(MainMenu)
+function renderLink(sidenav, text, state) {
+  return (
+    <li>
+      <NavLink
+        className={sidenav ? 'sidenav-close' : null}
+        to={{
+          pathname: '/create/setup',
+          state,
+        }}
+      >
+        {text}
+      </NavLink>
+    </li>
+  )
+}

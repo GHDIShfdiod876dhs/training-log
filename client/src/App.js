@@ -3,16 +3,20 @@ import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from 'react-apollo'
 import { BrowserRouter as Router } from 'react-router-dom'
 
-// Components
 import NavBar from './components/navbar/NavBar'
 import Routes from './Routes'
 
-// Set up Apollo client
+// // Set up Apollo client
 const client = new ApolloClient({
-  // graphcool server
   uri: 'https://api.graph.cool/simple/v1/cjv06d4h4017f0176envsbvmi',
-  // express server and AtlasDB
-  // uri: 'http://localhost:4000/graphql',
+  request: operation => {
+    const token = localStorage.getItem('token')
+    operation.setContext({
+      headers: {
+        authorization: token,
+      },
+    })
+  },
 })
 
 function App() {

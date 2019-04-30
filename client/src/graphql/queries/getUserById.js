@@ -4,16 +4,16 @@ import { exerciseFieldsFragment } from './getExercise'
 
 export default gql`
   query getUserQuery($id: ID) {
-    user(id: $id) {
+    User(id: $id) {
       id
       name
-      preferences {
-        trackCycle
-      }
+      # preferences {
+      #   trackCycle
+      # }
       programs {
         id
         name
-        startDate
+        # startDate
       }
       workouts {
         ...workoutFields

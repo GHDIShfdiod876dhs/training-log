@@ -5,20 +5,19 @@ export const setFieldsFragment = gql`
   fragment setFields on Set {
     id
     number
-    reps
-    weight
-    time
+    data {
+      id
+      name
+      value
+    }
     notes
     exercise {
       ...exerciseFields
     }
-    userDefinedData {
-      id
-      name
-      datum
-    }
     completed
-    workoutId
+    workout {
+      id
+    }
   }
   ${exerciseFieldsFragment}
 `

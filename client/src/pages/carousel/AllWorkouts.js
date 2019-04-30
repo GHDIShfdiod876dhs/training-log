@@ -7,7 +7,7 @@ import getUserById from '../../graphql/queries/getUserById'
 import CarouselWorkout from './CarouselWorkout'
 
 const carouselStyles = {
-  scrollSnapType: 'mandatory',
+  // scrollSnapType: 'mandatory',
   scrollSnapPointsY: 'repeat(100vw)',
   scrollSnapType: 'x mandatory',
   display: 'flex',
