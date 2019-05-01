@@ -14,7 +14,7 @@ import CREATE_EXERCISE_MUTATION from '../../graphql/mutations/createExercise'
 import CREATE_EXERCISE_FIELD_MUTATION from '../../graphql/mutations/createExerciseField'
 import ADD_EXERCISE_TO_USER_MUTATION from '../../graphql/mutations/addExerciseToUser'
 import ADD_FIELDS_TO_EXERCISE_MUTATION from '../../graphql/mutations/addFieldsToExercise'
-import getExercisesForUser from '../../graphql/queries/getExercisesForUser'
+// import getExercisesForUser from '../../graphql/queries/getExercisesForUser'
 
 function CreateExercise(props) {
   const [name, setName] = useState(null)

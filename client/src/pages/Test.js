@@ -2,7 +2,6 @@ import React, { useEffect } from 'react'
 //import Collection from '../components/Collection';
 import Checkbox from './execute_workout/execute_set/Checkbox'
 import Loader from '../components/Loader'
-import ExerciseFields from './create_exercise/ExerciseFields'
 
 const divStyles = {
   margin: '1rem',

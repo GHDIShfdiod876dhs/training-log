@@ -5,7 +5,7 @@ import PRoute from './components/ProtectedRoute'
 // Components
 import FrontPage from './pages/FrontPage(graphcool)'
 import ExecuteWorkout from './pages/execute_workout/ExecuteWorkout'
-import CreateProgram from './pages/CreateProgram'
+import CreateProgram from './pages/create_program/CreateProgram'
 import SetupWorkout from './pages/SetupWorkout'
 import CreateWorkout from './pages/CreateWorkout'
 import CreateExercise from './pages/create_exercise/CreateExercise'
