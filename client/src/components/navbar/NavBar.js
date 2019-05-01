@@ -7,15 +7,15 @@ import Logout from './Logout'
 
 export default withRouter(props => {
   const id = localStorage.getItem('id')
-  console.log(id)
 
   useEffect(() => {
-    const instance = M.Sidenav.init(
-      document.querySelector('.sidenav')
-      //{ draggable: false, preventScrolling: false, edge: 'right' }
-    )
-    return () => instance && instance.destroy()
-  })
+    M.AutoInit()
+    // const instance = M.Sidenav.init(
+    //   document.querySelector('.sidenav')
+    //   //{ draggable: false, preventScrolling: false, edge: 'right' }
+    // )
+    // return () => instance && instance.destroy()
+  }, [props.location])
 
   const links = [
     { to: '/create/program', text: 'Start a new Program' },
