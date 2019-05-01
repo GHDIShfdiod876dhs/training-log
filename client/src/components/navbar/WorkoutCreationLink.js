@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom'
 
 import GET_USER_QUERY from '../../graphql/queries/getUserById'
 
-export default ({ sidenav }) => {
+export default () => {
   const id = localStorage.getItem('id')
   if (!id) return null
   return (
@@ -16,14 +16,13 @@ export default ({ sidenav }) => {
 
         return currentProgram ? (
           renderLink(
-            sidenav,
             `Add a new workout to your current program "${currentProgram.name}"`,
             { User, programId: currentProgram.id }
           )
         ) : (
           <>
             <li className='subheader'>Looks like you don't have any programs yet.</li>
-            {renderLink(sidenav, 'Create a standalone workout?', { User })}
+            {renderLink('Create a standalone workout?', { User })}
           </>
         )
       }}
@@ -31,11 +30,11 @@ export default ({ sidenav }) => {
   )
 }
 
-function renderLink(sidenav, text, state) {
+function renderLink(text, state) {
   return (
     <li>
       <NavLink
-        className={sidenav ? 'sidenav-close' : null}
+        className='sidenav-close'
         to={{
           pathname: '/create/setup',
           state,
