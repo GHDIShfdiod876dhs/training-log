@@ -1,5 +1,6 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import { Route } from 'react-router-dom'
+import PRoute from './components/ProtectedRoute'
 
 // Components
 import FrontPage from './pages/FrontPage(graphcool)'
@@ -13,53 +14,26 @@ import AllWorkouts from './pages/carousel/AllWorkouts'
 import AddCustomExerciseFields from './pages/AddCustomExerciseFields'
 import AllWorkoutsCalendar from './pages/calendar/AllWorkoutsCalendar'
 import Signup from './pages/login_signup/Signup'
-import Signin from './pages/login_signup/Signin'
+import Signin from './pages/login_signup/Login'
 
 import Test from './pages/Test'
 
-// Contexts
-import UserContext from './contexts/UserContext'
+export default () => (
+  <>
+    <Route path='/test' component={Test} />
 
-const Routes = () => {
-  const userId = useContext(UserContext)
-  return (
-    <>
-      <Route path='/test' render={() => <Test userId={userId} />} />
+    <Route path='/signup' component={Signup} />
+    <Route path='/signin' component={Signin} />
 
-      <Route exact path='/' render={() => <FrontPage userId={userId} />} />
-
-      <Route path='/workout/:id' component={ExecuteWorkout} />
-
-      <Route path='/create/program' render={() => <CreateProgram userId={userId} />} />
-
-      <Route path='/create/setup' render={() => <SetupWorkout userId={userId} />} />
-
-      <Route
-        path='/create/workout/:id'
-        render={() => <CreateWorkout userId={userId} />}
-      />
-
-      <Route path='/create/exercise' render={() => <CreateExercise userId={userId} />} />
-
-      <Route
-        path='/customize_exercise/:id'
-        render={() => <AddCustomExerciseFields userId={userId} />}
-      />
-
-      <Route path='/create/set' render={() => <CreateSet userId={userId} />} />
-
-      <Route exact path='/workouts' render={() => <AllWorkouts userId={userId} />} />
-
-      <Route
-        path='/workouts/calendar'
-        render={() => <AllWorkoutsCalendar userId={userId} />}
-      />
-
-      <Route path='/signup' component={Signup} />
-
-      <Route path='/signin' component={Signin} />
-    </>
-  )
-}
-
-export default Routes
+    <PRoute exact path='/' component={FrontPage} />
+    <PRoute path='/workout/:id' component={ExecuteWorkout} />
+    <PRoute path='/create/program' component={CreateProgram} />
+    <PRoute path='/create/setup' component={SetupWorkout} />
+    <PRoute path='/create/workout/:id' component={CreateWorkout} />
+    <PRoute path='/create/exercise' component={CreateExercise} />
+    <PRoute path='/customize_exercise/:id' component={AddCustomExerciseFields} />
+    <PRoute path='/create/set' component={CreateSet} />
+    <PRoute exact path='/workouts' component={AllWorkouts} />
+    <PRoute path='/workouts/calendar' component={AllWorkoutsCalendar} />
+  </>
+)

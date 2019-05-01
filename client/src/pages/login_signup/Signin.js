@@ -42,12 +42,14 @@ export default withApollo(({ client }) => {
             }}
           >
             <input
+              type='email'
               placeholder='email'
               ref={node => {
                 emailInput = node
               }}
             />
             <input
+              type='password'
               placeholder='password'
               ref={node => {
                 passwordInput = node

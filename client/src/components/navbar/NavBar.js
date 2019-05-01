@@ -1,18 +1,20 @@
 import React, { useEffect } from 'react'
-import { NavLink } from 'react-router-dom'
+import { NavLink, withRouter } from 'react-router-dom'
 import M from 'materialize-css'
 
 import WorkoutCreationLink from './WorkoutCreationLink'
+import Logout from './Logout'
 
-export default function NavBar() {
+export default withRouter(props => {
   const id = localStorage.getItem('id')
+  console.log(id)
 
   useEffect(() => {
     const instance = M.Sidenav.init(
       document.querySelector('.sidenav')
       //{ draggable: false, preventScrolling: false, edge: 'right' }
     )
-    return () => instance.destroy()
+    return () => instance && instance.destroy()
   })
 
   const links = [
@@ -38,13 +40,18 @@ export default function NavBar() {
           </NavLink>
           {id && (
             <>
-              <a href='#!' data-target='mobile-nav' className='sidenav-trigger right'>
+              <a
+                href='#!'
+                data-target='mobile-nav'
+                className='sidenav-trigger right show-on-large'
+              >
                 <i className='material-icons'>menu</i>
               </a>
-              <ul className='right hide-on-med-and-down'>
+              {/* <ul className='right hide-on-med-and-down'>
                 <WorkoutCreationLink userId={id} />
                 {renderLinks({ sidenav: false })}
-              </ul>
+                <Logout />
+              </ul> */}
             </>
           )}
         </div>
@@ -58,8 +65,9 @@ export default function NavBar() {
           </li>
           <WorkoutCreationLink sidenav userId={id} />
           {renderLinks({ sidenav: true })}
+          <Logout sidenav />
         </ul>
       )}
     </>
   )
-}
+})

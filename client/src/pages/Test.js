@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 //import Collection from '../components/Collection';
 import Checkbox from './execute_workout/execute_set/Checkbox'
+import Loader from '../components/Loader'
 
 const divStyles = {
   margin: '1rem',
@@ -12,13 +13,13 @@ const divStyles = {
   width: '8rem',
   // height: '8rem'
   transform: 'scale(1)',
-  transition: 'transform 0.25s, box-shadow 0.25s'
+  transition: 'transform 0.25s, box-shadow 0.25s',
 }
 
 const labelStyles = {
   color: '#eee',
   fontSize: '0.9rem',
-  fontStyle: 'italic'
+  fontStyle: 'italic',
 }
 
 const inputStyles = {
@@ -26,7 +27,7 @@ const inputStyles = {
   color: 'white',
   fontSize: '1.85rem',
   textAlign: 'center',
-  marginTop: '0.25rem'
+  marginTop: '0.25rem',
 }
 
 export default () => {
@@ -36,9 +37,9 @@ export default () => {
 
   useEffect(() => {
     input = document.getElementById(id)
-    const [label] = Array
-      .from(document.querySelectorAll('label'))
-      .filter(el => el.htmlFor === id)
+    const [label] = Array.from(document.querySelectorAll('label')).filter(
+      el => el.htmlFor === id
+    )
     const container = document.getElementById(`${id}-container`)
     input.addEventListener('focus', () => {
       highlightLabel(label)
@@ -60,7 +61,7 @@ export default () => {
     }
   }, [input])
 
-  function highlightLabel(label) { 
+  function highlightLabel(label) {
     label.style.color = 'white'
     label.style.fontWeight = 'bold'
   }
@@ -77,7 +78,6 @@ export default () => {
     // console.log(parseInt(container.style.height))
     // container.style.width = (parseInt(container.style.width) + 1) + 'rem'
     container.style.transform = 'scale(1.1)'
-
   }
 
   function unPop(container) {
@@ -86,18 +86,20 @@ export default () => {
     // container.style.height = (parseInt(container.clientHeight) * (8/9)) + 'px'
     // container.style.width = (parseInt(container.style.width) - 1) + 'rem'
     container.style.transform = 'scale(1)'
-
   }
 
   const set = { completed: false, id: 3 }
 
   return (
     <>
+      <Loader />
       <Checkbox set={set} />
       <form>
         <div id={`${id}-container`} style={divStyles}>
-          <label htmlFor={id} style={labelStyles}>Label for the things</label>
-          <input id={id} type="number" style={inputStyles}/>
+          <label htmlFor={id} style={labelStyles}>
+            Label for the things
+          </label>
+          <input id={id} type='number' style={inputStyles} />
         </div>
       </form>
     </>
