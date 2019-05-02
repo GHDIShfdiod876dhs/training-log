@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
-import './ExerciseFields.css'
+import '../../ListTransitions.css'
 
 import Modal from '../../components/Modal(improved)'
 import ModalContent from './CreateNewField'

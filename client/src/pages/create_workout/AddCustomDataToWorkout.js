@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import { graphql, compose } from 'react-apollo'
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
+import '../../ListTransitions.css'
 
 // Components
 import TextInputField from '../../components/TextInputField'
 import Loader from '../../components/Loader'
 
-// Queries
 import {
   CREATE_WORKOUT_FIELD_MUTATION,
   ADD_FIELD_TO_WORKOUT_MUTATION,
@@ -90,20 +91,25 @@ function AddCustomFieldsToWorkout(props) {
             </>
           )}
         </li>
-
-        {fields &&
-          fields.map(field => (
-            <li className='collection-item' key={field.id}>
-              {field.name}
-              <i
-                id={field.id}
-                className='material-icons secondary-content grey-text'
-                onClick={handleRemove}
-              >
-                remove
-              </i>
-            </li>
-          ))}
+        <ReactCSSTransitionGroup
+          transitionName='list-transition'
+          transitionEnterTimeout={300}
+          transitionLeaveTimeout={300}
+        >
+          {fields &&
+            fields.map(field => (
+              <li className='collection-item' key={field.id}>
+                {field.name}
+                <i
+                  id={field.id}
+                  className='material-icons secondary-content grey-text'
+                  onClick={handleRemove}
+                >
+                  remove
+                </i>
+              </li>
+            ))}
+        </ReactCSSTransitionGroup>
       </ul>
     </>
   )

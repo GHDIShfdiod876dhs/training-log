@@ -1,5 +1,9 @@
 import { gql } from 'apollo-boost'
 
+export {
+  default as DELETE_EXERCISE_MUTATION,
+} from '../../graphql/mutations/deleteExercise'
+
 export const CREATE_WORKOUT_MUTATION = gql`
   mutation CREATE_WORKOUT_MUTATION($date: String!, $description: String) {
     createWorkout(date: $date, description: $description) {

@@ -3,7 +3,7 @@ import { workoutFieldsFragment } from './getWorkoutById'
 import { exerciseFieldsFragment } from './getExercise'
 
 export default gql`
-  query getUserQuery($id: ID) {
+  query GET_USER_QUERY($id: ID) {
     User(id: $id) {
       id
       name
