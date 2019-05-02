@@ -7,6 +7,7 @@ import TextInputField from '../../components/TextInputField'
 import TextAreaField from '../../components/TextAreaField'
 import Loader from '../../components/Loader'
 import Success from './Success'
+import Wrapper from '../../components/SuccessWrapper'
 
 // Queries
 // import addProgram from '../../graphql/mutations/addProgram'
@@ -57,7 +58,12 @@ function CreateProgram({ createProgram, addProgramToUser, userId }) {
 
   if (done) return <Redirect to='/' />
   if (loading) return <Loader />
-  if (success) return <Success newProgram={newProgram} setDone={setDone} />
+  if (success)
+    return (
+      <Wrapper setDone={setDone}>
+        <Success newProgram={newProgram} />
+      </Wrapper>
+    )
   return (
     <div className='container'>
       <form onSubmit={handleSubmit}>

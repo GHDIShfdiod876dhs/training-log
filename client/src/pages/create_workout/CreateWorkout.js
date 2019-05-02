@@ -3,17 +3,13 @@ import { graphql, compose } from 'react-apollo'
 import { withRouter, Link, Redirect } from 'react-router-dom'
 
 // Components
-import ExerciseList from './ExerciseList'
-import ExerciseDescription from '../components/ExerciseDescription'
-import CreateSetButtonsPanel from '../components/CreateSetButtonsPanel'
-import Workout from './Workout'
+import ExerciseList from '../ExerciseList'
+import ExerciseDescription from '../../components/ExerciseDescription'
+import CreateSetButtonsPanel from '../../components/CreateSetButtonsPanel'
+import Workout from '../Workout'
 
-// Queries
-import getUserById from '../graphql/queries/getUserById'
-import getWorkoutById from '../graphql/queries/getWorkoutById'
-
-// Contexts
-import UserContext from '../contexts/UserContext'
+import getUserById from '../../graphql/queries/getUserById'
+import getWorkoutById from '../../graphql/queries/getWorkoutById'
 import AddCustomFieldsToWorkout from './AddCustomFieldsToWorkout'
 
 function CreateWorkout(props) {
@@ -21,10 +17,11 @@ function CreateWorkout(props) {
     return null
   }
 
-  const userId = useContext(UserContext)
+  console.log(props)
   const [exercise, setExercise] = useState(props.location.state.exercise)
   const [done, setDone] = useState(false)
-  const { workout } = props.getWorkoutById
+  const { Workout: workout } = props.getWorkoutById
+  const { userId } = props
 
   if (done) {
     if (props.location.state.from === `/workout/${workout.id}`) {
@@ -32,6 +29,7 @@ function CreateWorkout(props) {
     }
     return <Redirect to='/workouts' />
   }
+  // return null
   return (
     <div className='container'>
       <Workout editable workoutId={workout.id} />

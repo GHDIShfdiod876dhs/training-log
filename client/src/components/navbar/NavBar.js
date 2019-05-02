@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { NavLink, withRouter } from 'react-router-dom'
 import M from 'materialize-css'
+import './Navbar.css'
 
 import WorkoutCreationLink from './WorkoutCreationLink'
 import Logout from './Logout'
@@ -41,7 +42,7 @@ export default withRouter(props => {
               </li>
               <WorkoutCreationLink userId={id} />
               {links.map((link, i) => (
-                <li key={i}>
+                <li key={i} className='section'>
                   <NavLink className='sidenav-close' to={link.to}>
                     {link.text}
                   </NavLink>

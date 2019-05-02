@@ -8,6 +8,7 @@ import TextAreaField from '../../components/TextAreaField'
 import ExerciseFields from './ExerciseFields'
 import Loader from '../../components/Loader'
 import Success from './Success'
+import Wrapper from '../../components/SuccessWrapper'
 
 // Queries
 import CREATE_EXERCISE_MUTATION from '../../graphql/mutations/createExercise'
@@ -29,6 +30,7 @@ function CreateExercise(props) {
 
   const handleSubmit = e => {
     e.preventDefault()
+    console.log('submitting')
     setLoading(true)
     // create new exercise && create new exercise fields
     const createdExercise = props.createExercise({
@@ -109,7 +111,12 @@ function CreateExercise(props) {
     return null
   }
   if (loading) return <Loader />
-  if (success) return <Success newExercise={newExercise} setDone={setDone} />
+  if (success)
+    return (
+      <Wrapper setDone={setDone}>
+        <Success newExercise={newExercise} />
+      </Wrapper>
+    )
   else {
     return (
       <>
@@ -131,12 +138,16 @@ function CreateExercise(props) {
             setFields={setFields}
             defaultFields={defaultFields}
           />
-          <button className='btn red darken-3'>Save</button>
+          <button type='submit' className='btn red darken-3'>
+            Save
+          </button>
         </form>
 
-        <button className='btn grey' onClick={() => setDone(true)}>
-          Cancel
-        </button>
+        <div className='section'>
+          <button className='btn grey' onClick={() => setDone(true)}>
+            Cancel
+          </button>
+        </div>
       </>
     )
   }

@@ -15,13 +15,15 @@ export default () => {
         const currentProgram = User.programs[User.programs.length - 1]
 
         return currentProgram ? (
-          renderLink(
-            `Add a new workout to your current program "${currentProgram.name}"`,
-            { User, programId: currentProgram.id }
-          )
+          renderLink(`Add a new workout to "${currentProgram.name}"`, {
+            User,
+            programId: currentProgram.id,
+          })
         ) : (
           <>
-            <li className='subheader'>Looks like you don't have any programs yet.</li>
+            <li className='subheader section'>
+              Looks like you don't have any programs yet.
+            </li>
             {renderLink('Create a standalone workout?', { User })}
           </>
         )
@@ -32,7 +34,7 @@ export default () => {
 
 function renderLink(text, state) {
   return (
-    <li>
+    <li className='section'>
       <NavLink
         className='sidenav-close'
         to={{

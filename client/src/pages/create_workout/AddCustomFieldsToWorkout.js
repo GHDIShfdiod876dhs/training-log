@@ -2,18 +2,18 @@ import React, { useState } from 'react'
 import { graphql, compose } from 'react-apollo'
 
 // Components
-import TextInputField from '../components/TextInputField'
+import TextInputField from '../../components/TextInputField'
 
 // Queries
-import addUserDefinedDataToWorkout from '../graphql/mutations/addUserDefinedDataToWorkout'
-import deleteUserDefinedDataFromWorkout from '../graphql/mutations/deleteUserDefinedDataFromWorkout'
-import getWorkoutById from '../graphql/queries/getWorkoutById'
+import addUserDefinedDataToWorkout from '../../graphql/mutations/addUserDefinedDataToWorkout'
+import deleteUserDefinedDataFromWorkout from '../../graphql/mutations/deleteUserDefinedDataFromWorkout'
+import getWorkoutById from '../../graphql/queries/getWorkoutById'
 
 function AddCustomFieldsToWorkout(props) {
   const [newField, setNewField] = useState(null)
   const [showForm, setShowForm] = useState(false)
 
-  const { loading, workout } = props.getWorkoutById
+  const { loading, Workout: workout } = props.getWorkoutById
   if (loading) {
     return <div>Loading...</div>
   }

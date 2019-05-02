@@ -23,7 +23,7 @@ function ExerciseList({ data, setExercise, deleteExercise }) {
     data.refetch()
   }, [])
 
-  const { exercises } = data.user
+  const { exercises } = data.User
 
   const displayExercise = exercise => (
     <li className='collection-item' key={exercise.id}>

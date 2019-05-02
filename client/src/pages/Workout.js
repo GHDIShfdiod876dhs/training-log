@@ -14,7 +14,7 @@ function Workout(props) {
   }
 
   const [collapsed, setCollapsed] = useState(true)
-  const { sets } = props.data.workout
+  const { sets } = props.data.Workout
   const [numSets, setNumSets] = useState(sets.length)
 
   useEffect(() => {

@@ -1,8 +1,7 @@
 import React from 'react'
 
-export default ({ newExercise, setDone }) => (
-  <div className='container'>
-    <p>Success!</p>
+export default ({ newExercise }) => (
+  <>
     <h4>{newExercise.name}</h4>
     <p>{newExercise.description}</p>
     <ul>
@@ -10,6 +9,5 @@ export default ({ newExercise, setDone }) => (
         <li key={field}>{field}</li>
       ))}
     </ul>
-    <button onClick={() => setDone(true)}>Done</button>
-  </div>
+  </>
 )

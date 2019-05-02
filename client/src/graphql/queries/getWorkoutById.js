@@ -4,25 +4,18 @@ import { setFieldsFragment } from './getSetById'
 
 export const workoutFieldsFragment = gql`
   fragment workoutFields on Workout {
-    id
-    date
-    description
-    # userDefinedData {
-    #   id
-    #   name
-    #   datum
-    # }
+    completed
     conditions {
       ...conditionsFields
     }
-    sets {
-      ...setFields
-    }
-    completed
-    # programId
-    # userId
+    date
+    description
+    id
     program {
       id
+    }
+    sets {
+      ...setFields
     }
     user {
       id
@@ -34,7 +27,7 @@ export const workoutFieldsFragment = gql`
 
 export default gql`
   query getWorkoutQuery($id: ID) {
-    workout(id: $id) {
+    Workout(id: $id) {
       ...workoutFields
     }
   }
