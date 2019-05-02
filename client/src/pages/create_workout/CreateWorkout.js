@@ -1,23 +1,23 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { graphql, compose } from 'react-apollo'
 import { withRouter, Link, Redirect } from 'react-router-dom'
 
 // Components
-import ExerciseList from '../ExerciseList'
+import ExerciseList from './ExerciseList'
 import ExerciseDescription from '../../components/ExerciseDescription'
 import CreateSetButtonsPanel from '../../components/CreateSetButtonsPanel'
 import Workout from '../Workout'
 
 import getUserById from '../../graphql/queries/getUserById'
 import getWorkoutById from '../../graphql/queries/getWorkoutById'
-import AddCustomFieldsToWorkout from './AddCustomFieldsToWorkout'
+import AddCustomFieldsToWorkout from './AddCustomDataToWorkout'
 
 function CreateWorkout(props) {
   if (props.getUserById.loading || props.getWorkoutById.loading) {
     return null
   }
 
-  console.log(props)
+  //console.log(props)
   const [exercise, setExercise] = useState(props.location.state.exercise)
   const [done, setDone] = useState(false)
   const { Workout: workout } = props.getWorkoutById

@@ -33,3 +33,38 @@ export const ADD_WORKOUT_TO_PROGRAM_MUTATION = gql`
     }
   }
 `
+
+export const CREATE_WORKOUT_FIELD_MUTATION = gql`
+  mutation CREATE_WORKOUT_FIELD_MUTATION($name: String!) {
+    createWorkoutData(name: $name) {
+      id
+      name
+      value
+    }
+  }
+`
+
+export const ADD_FIELD_TO_WORKOUT_MUTATION = gql`
+  mutation ADD_FIELD_TO_WORKOUT_MUTATION($workoutId: ID!, $fieldId: ID!) {
+    addToDataOnWorkout(dataWorkoutDataId: $fieldId, workoutWorkoutId: $workoutId) {
+      workoutWorkout {
+        id
+        data {
+          id
+          name
+          value
+        }
+      }
+    }
+  }
+`
+
+export const DELETE_WORKOUT_DATA_FIELD_MUTATION = gql`
+  mutation DELETE_WORKOUT_DATA_FIELD_MUTATION($id: ID!) {
+    deleteWorkoutData(id: $id) {
+      id
+      name
+      value
+    }
+  }
+`

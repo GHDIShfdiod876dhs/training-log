@@ -20,13 +20,18 @@ export const workoutFieldsFragment = gql`
     user {
       id
     }
+    data {
+      id
+      name
+      value
+    }
   }
   ${conditionsFieldsFragment}
   ${setFieldsFragment}
 `
 
 export default gql`
-  query getWorkoutQuery($id: ID) {
+  query GET_WORKOUT_QUERY($id: ID) {
     Workout(id: $id) {
       ...workoutFields
     }

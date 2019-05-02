@@ -3,10 +3,14 @@ import { graphql, compose } from 'react-apollo'
 
 // Components
 import TextInputField from '../../components/TextInputField'
+import Loader from '../../components/Loader'
 
 // Queries
-import addUserDefinedDataToWorkout from '../../graphql/mutations/addUserDefinedDataToWorkout'
-import deleteUserDefinedDataFromWorkout from '../../graphql/mutations/deleteUserDefinedDataFromWorkout'
+import {
+  CREATE_WORKOUT_FIELD_MUTATION,
+  ADD_FIELD_TO_WORKOUT_MUTATION,
+  DELETE_WORKOUT_DATA_FIELD_MUTATION,
+} from './Mutations'
 import getWorkoutById from '../../graphql/queries/getWorkoutById'
 
 function AddCustomFieldsToWorkout(props) {
@@ -15,23 +19,31 @@ function AddCustomFieldsToWorkout(props) {
 
   const { loading, Workout: workout } = props.getWorkoutById
   if (loading) {
-    return <div>Loading...</div>
+    return <Loader />
   }
-
-  const fields = workout.userDefinedData
+  const fields = workout.data
 
   const handleSubmit = e => {
     e.preventDefault()
     props
-      .addUserDefinedDataToWorkout({
+      .createField({
         variables: {
           name: newField,
-          workoutId: workout.id,
         },
       })
+      .then(res => {
+        console.log(res)
+        return props.addFieldToWorkout({
+          variables: {
+            fieldId: res.data.createWorkoutData.id,
+            workoutId: workout.id,
+          },
+          refetchQueries: ['GET_WORKOUT_QUERY'],
+        })
+      })
       .then(
-        ({ data }) => {
-          props.getWorkoutById.refetch()
+        res => {
+          console.log(res)
           document.getElementById('field-name').value = null
         },
         err => console.log(err)
@@ -40,18 +52,13 @@ function AddCustomFieldsToWorkout(props) {
 
   const handleRemove = e => {
     props
-      .deleteUserDefinedDataFromWorkout({
+      .deleteField({
         variables: {
           id: e.target.id,
         },
+        refetchQueries: ['GET_WORKOUT_QUERY'],
       })
-      .then(
-        res => {
-          console.log('deleted:', res)
-          props.getWorkoutById.refetch()
-        },
-        err => console.log(err)
-      )
+      .then(res => console.log('deleted:', res), err => console.log(err))
   }
 
   return (
@@ -103,8 +110,9 @@ function AddCustomFieldsToWorkout(props) {
 }
 
 export default compose(
-  graphql(addUserDefinedDataToWorkout, { name: 'addUserDefinedDataToWorkout' }),
-  graphql(deleteUserDefinedDataFromWorkout, { name: 'deleteUserDefinedDataFromWorkout' }),
+  graphql(CREATE_WORKOUT_FIELD_MUTATION, { name: 'createField' }),
+  graphql(ADD_FIELD_TO_WORKOUT_MUTATION, { name: 'addFieldToWorkout' }),
+  graphql(DELETE_WORKOUT_DATA_FIELD_MUTATION, { name: 'deleteField' }),
   graphql(getWorkoutById, {
     options: props => {
       return {

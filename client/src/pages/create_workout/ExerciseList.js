@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react'
 import { compose, graphql } from 'react-apollo'
 import M from 'materialize-css'
 
-import Modal from '../components/Modal'
+import Modal from '../../components/Modal'
 
 // Queries
-import getUserById from '../graphql/queries/getUserById'
-import deleteExercise from '../graphql/mutations/deleteExercise'
+import getUserById from '../../graphql/queries/getUserById'
+import deleteExercise from '../../graphql/mutations/deleteExercise'
 
 function ExerciseList({ data, setExercise, deleteExercise }) {
   if (data.loading) {
