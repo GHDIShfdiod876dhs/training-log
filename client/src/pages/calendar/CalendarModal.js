@@ -19,9 +19,7 @@ const CalendarModal = ({ content, history, id, workout }) => {
               {workout.completed ? (
                 <RepeatWorkout workout={workout} history={history} />
               ) : (
-                <span onClick={() => history.push(`/workout/${id}`)}>
-                  'Let\'s do this'
-                </span>
+                <span onClick={() => history.push(`/workout/${id}`)}>Let's do this</span>
               )}
             </button>
             <button className='modal-close btn-flat'>Close</button>

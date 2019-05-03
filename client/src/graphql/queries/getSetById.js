@@ -23,7 +23,7 @@ export const setFieldsFragment = gql`
 `
 
 export default gql`
-  query getSetQuery($id: ID) {
+  query GET_SET_QUERY($id: ID) {
     Set(id: $id) {
       ...setFields
     }

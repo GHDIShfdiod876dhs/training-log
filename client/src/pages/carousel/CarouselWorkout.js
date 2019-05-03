@@ -19,8 +19,6 @@ function WorkoutScheduled({
   setPeers,
   updateWorkoutDate,
 }) {
-  //const startOfDayToday = moment(new Date()).startOf('day')
-  //const pastWorkout = workout.date < startOfDayToday
   const [date, setDate] = useState(workout.date)
   const [updateDateMode, setUpdateDateMode] = useState(false)
 
@@ -58,12 +56,6 @@ function WorkoutScheduled({
 
   return (
     <div className='card grey lighten-3' key={workout.id}>
-      {/* { pastWorkout && !workout.completed &&
-        <div className="skipped-set grey-text text-darken-3">
-          -- Skipped --
-        </div>
-      } */}
-
       <div className='card-content'>
         <div className='card-title'>
           {updateDateMode ? (
