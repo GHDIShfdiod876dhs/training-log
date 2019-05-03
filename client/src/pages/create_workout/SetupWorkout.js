@@ -1,19 +1,14 @@
 import React, { useState } from 'react'
-import { graphql, compose } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { Redirect, withRouter } from 'react-router-dom'
 
 // Components
 import Datepicker from '../../components/Datepicker'
 import TextAreaField from '../../components/TextAreaField'
 
-import {
-  CREATE_WORKOUT_MUTATION,
-  ADD_WORKOUT_TO_PROGRAM_MUTATION,
-  ADD_WORKOUT_TO_USER_MUTATION,
-} from './Mutations'
+import { CREATE_WORKOUT_MUTATION } from './Mutations'
 
 function SetupWorkout(props) {
-  console.log(props)
   const [description, setDescription] = useState(null)
   const [date, setDate] = useState(String(Date.now()))
   const [canceled, setCanceled] = useState(false)
@@ -21,7 +16,6 @@ function SetupWorkout(props) {
 
   const { userId } = props
   const { programId } = props.location.state
-  //console.log(props)
 
   const handleSubmit = e => {
     e.preventDefault()
@@ -30,34 +24,14 @@ function SetupWorkout(props) {
         variables: {
           date,
           description,
+          userId,
+          programId: programId || null,
         },
       })
-      .then(({ data: { createWorkout: { id: workoutId } } }) => {
-        console.log(workoutId)
-        const addToUser = props.addWorkoutToUser({
-          variables: {
-            workoutId,
-            userId,
-          },
-        })
-        const addToProgram = props.addWorkoutToProgram({
-          variables: {
-            workoutId,
-            programId,
-          },
-        })
-        return programId ? Promise.all([addToUser, addToProgram]) : [addToUser]
-      })
       .then(
-        ([
-          {
-            data: {
-              addToUserWorkouts: { workoutsWorkout: workout },
-            },
-          },
-        ]) => {
-          setWorkout(workout)
+        ({ data: { createWorkout: workout } }) => {
           console.log(workout)
+          setWorkout(workout)
         },
         err => console.log(err)
       )
@@ -101,9 +75,5 @@ function SetupWorkout(props) {
 }
 
 export default withRouter(
-  compose(
-    graphql(CREATE_WORKOUT_MUTATION, { name: 'createWorkout' }),
-    graphql(ADD_WORKOUT_TO_PROGRAM_MUTATION, { name: 'addWorkoutToProgram' }),
-    graphql(ADD_WORKOUT_TO_USER_MUTATION, { name: 'addWorkoutToUser' })
-  )(SetupWorkout)
+  graphql(CREATE_WORKOUT_MUTATION, { name: 'createWorkout' })(SetupWorkout)
 )
