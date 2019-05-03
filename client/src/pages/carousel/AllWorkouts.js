@@ -5,6 +5,7 @@ import { graphql } from 'react-apollo'
 import getUserById from '../../graphql/queries/getUserById'
 
 import CarouselWorkout from './CarouselWorkout'
+import Loader from '../../components/Loader'
 
 const carouselStyles = {
   // scrollSnapType: 'mandatory',
@@ -30,10 +31,8 @@ export const buttonStyles = {
 }
 
 function AllWorkouts({ getUserById, history }) {
-  const { loading, user } = getUserById
-  if (loading) return null
-
-  console.log(user)
+  const { loading, User: user } = getUserById
+  if (loading) return <Loader />
 
   const { workouts } = user
   //const workoutIds = workouts.map(workout => workout.id)

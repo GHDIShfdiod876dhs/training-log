@@ -6,7 +6,7 @@ import { withRouter, Link, Redirect } from 'react-router-dom'
 import ExerciseList from './ExerciseList'
 import ExerciseDescription from '../../components/ExerciseDescription'
 import CreateSetButtonsPanel from '../../components/CreateSetButtonsPanel'
-import Workout from '../Workout'
+import Workout from '../display_workout/Workout'
 
 import getUserById from '../../graphql/queries/getUserById'
 import getWorkoutById from '../../graphql/queries/getWorkoutById'

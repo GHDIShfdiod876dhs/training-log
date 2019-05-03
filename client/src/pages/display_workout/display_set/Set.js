@@ -1,11 +1,17 @@
 import React from 'react'
-import { graphql } from 'react-apollo'
-import formatLabel from '../utils/formatInputLabel'
+import { compose, graphql } from 'react-apollo'
+import formatLabel from '../../../utils/formatInputLabel'
 
-// Queries
-import deleteSet from '../graphql/mutations/deleteSet'
+import Loader from '../../../components/Loader'
 
-function Set({ editable, set, deleteSet, numSets, setNumSets }) {
+import GET_SET_QUERY from '../../../graphql/queries/getSetById'
+import deleteSet from '../../../graphql/mutations/deleteSet'
+
+function Set({ editable, getSet, deleteSet, numSets, setNumSets }) {
+  if (getSet.loading) return <Loader />
+
+  const { Set: set } = getSet
+  console.log(set)
   const removeSet = id => {
     deleteSet({
       variables: { id },
@@ -24,10 +30,7 @@ function Set({ editable, set, deleteSet, numSets, setNumSets }) {
   }
 
   const fields = [
-    ...set.data,
-    { id: 0, name: 'weight', datum: set.weight },
-    { id: 1, name: 'reps', datum: set.reps },
-    { id: 2, name: 'time', datum: set.time },
+    //...set.data,
     { id: 3, name: 'notes', datum: set.notes },
   ]
 
@@ -35,9 +38,7 @@ function Set({ editable, set, deleteSet, numSets, setNumSets }) {
     <li className='collection-item'>
       <div className='row valign-wrapper'>
         <div className='col s1'>{set.number}</div>
-        <div className='col s10'>
-          <h6>{set.exercise.name}</h6>
-        </div>
+        <div className='col s10'>{/* <h6>{set.exercise.name}</h6> */}</div>
         <div className='col s1'>
           {editable && (
             <i className='material-icons' onClick={() => removeSet(set.id)}>
@@ -51,4 +52,16 @@ function Set({ editable, set, deleteSet, numSets, setNumSets }) {
   )
 }
 
-export default graphql(deleteSet, { name: 'deleteSet' })(Set)
+export default compose(
+  graphql(deleteSet, { name: 'deleteSet' }),
+  graphql(GET_SET_QUERY, {
+    options: props => {
+      return {
+        variables: {
+          id: props.setId,
+        },
+      }
+    },
+    name: 'getSet',
+  })
+)(Set)

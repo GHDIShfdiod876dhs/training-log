@@ -2,23 +2,18 @@ import React from 'react'
 import moment from 'moment'
 
 import Modal from './CalendarModal'
-import Workout from '../Workout'
-
+import Workout from '../display_workout/Workout'
 
 export default ({ date: { date, workout }, numDays }) => {
   const isValidDate = date.date > 0 && numDays >= date.date
   const currentMonth = moment().month()
   const currentYear = moment().year()
-  const isPast = (
-      date.date < moment().date() &&
+  const isPast =
+    (date.date < moment().date() &&
       date.month <= currentMonth &&
-      date.year <= currentYear
-    ) || (
-      date.month < currentMonth &&
-      date.year <= currentYear
-    ) || (
-      date.year < currentYear
-    )
+      date.year <= currentYear) ||
+    (date.month < currentMonth && date.year <= currentYear) ||
+    date.year < currentYear
 
   return (
     <>
@@ -31,29 +26,30 @@ export default ({ date: { date, workout }, numDays }) => {
           borderRadius: '5%',
           padding: '0 0.25em',
           flex: 'calc(100% / 7)',
-          backgroundColor: !workout ? 'none' :
-            workout.completed ? '#a5d6a7' : 
-            isPast ? '#bdbdbd' :
-            '#ef9a9a'
+          backgroundColor: !workout
+            ? 'none'
+            : workout.completed
+            ? '#a5d6a7'
+            : isPast
+            ? '#bdbdbd'
+            : '#ef9a9a',
         }}
       >
-        { isValidDate && date.date }
-        
+        {isValidDate && date.date}
       </div>
 
-      { 
-        workout &&
+      {workout && (
         <Modal
           id={workout.id}
           content={
             <>
               <div>{workout.description}</div>
-              <Workout workoutId={workout.id}/>
+              <Workout workoutId={workout.id} />
             </>
           }
           workout={workout}
         />
-      }
+      )}
     </>
   )
 }

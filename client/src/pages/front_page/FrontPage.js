@@ -2,9 +2,9 @@ import React from 'react'
 import { Query } from 'react-apollo'
 
 import TodaysWorkout from './TodaysWorkout'
-import Loader from '../components/Loader'
+import Loader from '../../components/Loader'
 
-import GET_USER_QUERY from '../graphql/queries/getUserById'
+import GET_USER_QUERY from '../../graphql/queries/getUserById'
 
 export default ({ userId: id }) => (
   <Query query={GET_USER_QUERY} variables={{ id }}>

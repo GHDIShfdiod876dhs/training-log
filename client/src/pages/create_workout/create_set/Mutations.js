@@ -28,6 +28,8 @@ export const CREATE_SET_MUTATION = gql`
       }
       exercise {
         id
+        name
+        description
       }
     }
   }

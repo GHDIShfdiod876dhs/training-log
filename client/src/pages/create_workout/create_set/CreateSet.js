@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { graphql, compose } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { withRouter, Redirect } from 'react-router-dom'
 
 // Components
@@ -8,12 +8,10 @@ import NumberInputField from '../../../components/NumberInputField'
 import TextAreaField from '../../../components/TextAreaField'
 
 import { CREATE_SET_MUTATION } from './Mutations'
-//import addUserDefinedDataToSet from '../../../graphql/mutations/addUserDefinedDataToSet'
 
 function CreateSet(props) {
   const { exercise, setNumber, workout } = props.location.state
 
-  console.log(exercise)
   const [notes, setNotes] = useState(null)
   const [fields, setFields] = useState(exercise.fields)
   const [numberOfSets, setNumberOfSets] = useState(1)
@@ -101,9 +99,4 @@ function CreateSet(props) {
   )
 }
 
-export default withRouter(
-  graphql(CREATE_SET_MUTATION, { name: 'createSet' })(
-    //graphql(addUserDefinedDataToSet, { name: 'addUserDefinedData' })
-    CreateSet
-  )
-)
+export default withRouter(graphql(CREATE_SET_MUTATION, { name: 'createSet' })(CreateSet))

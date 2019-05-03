@@ -3,7 +3,7 @@ import { graphql, compose } from 'react-apollo'
 import moment from 'moment'
 
 import Modal from '../../components/Modal(improved)'
-import Workout from '../Workout'
+import Workout from '../display_workout/Workout'
 import DropdownNotCompleted from './DropdownNotCompleted'
 import DropdownCompleted from './DropdownCompleted'
 import Datepicker from '../../components/Datepicker'
