@@ -2,7 +2,7 @@ import React from 'react'
 import ApolloClient from 'apollo-boost'
 import { ApolloProvider } from 'react-apollo'
 import { BrowserRouter as Router } from 'react-router-dom'
-
+import { LastLocationProvider } from 'react-router-last-location'
 import NavBar from './components/navbar/NavBar'
 import Routes from './Routes'
 
@@ -20,22 +20,16 @@ const client = new ApolloClient({
 })
 
 function App() {
-  // const userId = useContext(UserContext)
   return (
     <ApolloProvider client={client}>
       <Router>
-        {/* <UserContext.Provider value={userId}> */}
+        <LastLocationProvider>
+          <div id='main' className='App'>
+            <NavBar />
+          </div>
 
-        <div id='main' className='App'>
-          <NavBar />
-          {/* Empty user 'Dave' userId="5c900180a63528674f785781" 
-                User with data 'John' userId="5c7e9e91a6d95baac9aeadb4" */}
-        </div>
-
-        {/* <Routes userId={ userId } /> */}
-        <Routes />
-
-        {/* </UserContext.Provider> */}
+          <Routes />
+        </LastLocationProvider>
       </Router>
     </ApolloProvider>
   )

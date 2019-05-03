@@ -6,11 +6,7 @@ export default ({ component: Component, ...rest }) => (
     {...rest}
     render={props => {
       const userId = localStorage.getItem('id')
-      return userId ? (
-        <Component {...props} userId={userId} />
-      ) : (
-        <Redirect to='./signin' />
-      )
+      return userId ? <Component {...props} userId={userId} /> : <Redirect to='/signin' />
     }}
   />
 )
