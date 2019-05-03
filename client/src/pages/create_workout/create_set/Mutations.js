@@ -1,34 +1,34 @@
 import { gql } from 'apollo-boost'
 
-const addSet = gql`
-  mutation(
+export const CREATE_SET_MUTATION = gql`
+  mutation CREATE_SET_MUTATION(
     $number: Int!
-    $reps: Int
-    $weight: Float
-    $time: Float
+    $data: [SetdataSetDataField!]
     $notes: String
     $exerciseId: ID!
     $workoutId: ID!
   ) {
     createSet(
       number: $number
-      reps: $reps
-      weight: $weight
-      time: $time
       notes: $notes
       exerciseId: $exerciseId
       workoutId: $workoutId
+      data: $data
     ) {
       id
+      data {
+        id
+        name
+        value
+      }
       number
-      reps
-      weight
-      time
       notes
-      exerciseId
-      workoutId
+      workout {
+        id
+      }
+      exercise {
+        id
+      }
     }
   }
 `
-
-export default addSet

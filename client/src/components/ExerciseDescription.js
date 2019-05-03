@@ -1,6 +1,7 @@
 import React from 'react'
 import { graphql, compose } from 'react-apollo'
 import ContentEditable from 'react-contenteditable'
+import Loader from './Loader'
 
 // Queries
 import getExerciseQuery from '../graphql/queries/getExercise'
@@ -9,7 +10,8 @@ import updateExerciseDescription from '../graphql/mutations/updateExerciseDescri
 import getExercisesForUserQuery from '../graphql/queries/getExercisesForUser'
 
 function ExerciseDescription(props) {
-  const handleAsyncErr = err => console.log(err)
+  const { loading, Exercise: exercise } = props.data
+  if (loading) return <Loader />
 
   const handleNameBlur = e => {
     props
@@ -18,9 +20,9 @@ function ExerciseDescription(props) {
           name: e.target.textContent,
           id: props.exerciseId,
         },
-        refetchQueries: [{ query: getExercisesForUserQuery }],
+        refetchQueries: ['GET_USER_QUERY'],
       })
-      .then(() => {}, handleAsyncErr)
+      .catch(err => console.log(err))
   }
 
   const handleDescriptionBlur = e => {
@@ -32,10 +34,8 @@ function ExerciseDescription(props) {
         },
         refetchQueries: [{ query: getExercisesForUserQuery }],
       })
-      .then(() => {}, handleAsyncErr)
+      .catch(err => console.log(err))
   }
-
-  const { exercise } = props.data
 
   return (
     <div className='card grey lighten-3'>

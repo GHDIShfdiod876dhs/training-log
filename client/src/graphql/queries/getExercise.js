@@ -5,16 +5,16 @@ export const exerciseFieldsFragment = gql`
     id
     name
     description
-    # customFields {
-    #   id
-    #   name
-    # }
+    fields {
+      id
+      name
+    }
   }
 `
 
 export default gql`
-  query getExerciseQuery($id: ID) {
-    exercise(id: $id) {
+  query GET_EXERCISE_QUERY($id: ID) {
+    Exercise(id: $id) {
       ...exerciseFields
     }
   }

@@ -24,7 +24,7 @@ function Set({ editable, set, deleteSet, numSets, setNumSets }) {
   }
 
   const fields = [
-    ...set.userDefinedData,
+    ...set.data,
     { id: 0, name: 'weight', datum: set.weight },
     { id: 1, name: 'reps', datum: set.reps },
     { id: 2, name: 'time', datum: set.time },
