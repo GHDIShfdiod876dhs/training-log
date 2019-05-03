@@ -5,48 +5,65 @@ import M from 'materialize-css'
 
 // Components
 import TextInputField from '../../../components/TextInputField'
+import Loader from '../../../components/Loader'
 
 // Queries
-import addCustomExerciseField from '../../../graphql/mutations/addCustomExerciseField'
+import {
+  ADD_FIELD_TO_EXERCISE_MUTATION,
+  ADD_DATA_FIELD_TO_SET_MUTATION,
+} from './Mutations'
 import getExercise from '../../../graphql/queries/getExercise'
+import GET_SET_QUERY from '../../../graphql/queries/getSetById'
 
 function AddCustomExerciseFields(props) {
-  const { loading, exercise } = props.getExercise
-  if (loading) return <>Loading...</>
+  const { loading, Exercise: exercise } = props.getExercise
+  if (loading) return <Loader />
 
   const [newField, setNewField] = useState(null)
+  console.log('fields from CustomExerciseInput:', exercise.fields)
+  console.log('set from CustomExerciseInput:', props.set)
 
   const handleSubmit = e => {
     e.preventDefault()
-    props
-      .addCustomExerciseField({
+    // check for name duplication
+    if (exercise.fields.find(elem => elem.name === newField)) {
+      return M.toast({
+        html: `A field named "${newField}" already exists on this exercise! Please give your new field a unique name.`,
+      })
+    }
+    Promise.all([
+      props.addFieldToExercise({
         variables: {
           name: newField,
           exerciseId: exercise.id,
         },
-      })
-      .then(
-        ({
-          data: {
-            addCustomExerciseField: { name },
-          },
-        }) => {
-          M.toast({
-            html: `Successfully created field: "${name}!"`,
-          })
-          setNewField(null)
-          props.getExercise.refetch()
-          document.getElementById('field-name').value = null
+        refetchQueries: [{ query: getExercise, variables: { id: exercise.id } }],
+      }),
+      props.addFieldToSet({
+        variables: {
+          name: newField,
+          setId: props.set.id,
         },
-        err => {
-          if (err.message.includes('REPEATED_FIELD_NAME_ERROR')) {
-            M.toast({
-              html: `A field named "${newField}" already exists on this exercise! Please give your new field a unique name.`,
-            })
-          }
-          console.log(err.message)
-        }
-      )
+        refetchQueries: [{ query: GET_SET_QUERY, variables: { id: props.set.id } }],
+      }),
+    ]).then(
+      ([
+        ,
+        {
+          data: {
+            createSetDataField: { name, id },
+          },
+        },
+      ]) => {
+        M.toast({
+          html: `Successfully created field: "${name}!"`,
+        })
+        setNewField(null)
+        props.dispatch({ type: 'NEW_FIELD', name, id })
+        document.getElementById('field-name').value = null
+      },
+      err => console.log(err)
+    )
   }
 
   return (
@@ -64,12 +81,13 @@ function AddCustomExerciseFields(props) {
 
 export default withRouter(
   compose(
-    graphql(addCustomExerciseField, { name: 'addCustomExerciseField' }),
+    graphql(ADD_FIELD_TO_EXERCISE_MUTATION, { name: 'addFieldToExercise' }),
+    graphql(ADD_DATA_FIELD_TO_SET_MUTATION, { name: 'addFieldToSet' }),
     graphql(getExercise, {
       options: props => {
         return {
           variables: {
-            id: (props.exercise && props.exercise.id) || props.match.params.id,
+            id: props.set.exercise.id,
           },
         }
       },

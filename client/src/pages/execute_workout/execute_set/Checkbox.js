@@ -1,7 +1,7 @@
 import React from 'react'
 import { graphql } from 'react-apollo'
 
-import updateSetCompletion from '../../../graphql/mutations/updateSetCompletion'
+import { UPDATE_SET_COMPLETED_MUTATION } from './Mutations'
 
 const checkboxStyles = {
   width: '1.5rem',
@@ -26,11 +26,11 @@ const checkmarkStyles = {
   left: '-0.5rem',
 }
 
-const Checkbox = ({ set, completed, setCompleted, updateSetCompletion }) => {
+const Checkbox = ({ set, completed, setCompleted, updateSetCompleted }) => {
   const { id } = set
 
   const handleClick = () => {
-    updateSetCompletion({
+    updateSetCompleted({
       variables: {
         id,
         completed: !completed,
@@ -53,4 +53,6 @@ const Checkbox = ({ set, completed, setCompleted, updateSetCompletion }) => {
   )
 }
 
-export default graphql(updateSetCompletion, { name: 'updateSetCompletion' })(Checkbox)
+export default graphql(UPDATE_SET_COMPLETED_MUTATION, { name: 'updateSetCompleted' })(
+  Checkbox
+)

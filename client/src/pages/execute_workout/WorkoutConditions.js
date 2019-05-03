@@ -22,7 +22,7 @@ function WorkoutConditions(props) {
     return <p>Loading...</p>
   }
 
-  const { conditions } = props.getWorkoutById.workout
+  const { conditions } = props.getWorkoutById.Workout
   const initialState = conditions
   const [state, dispatch] = useReducer(reducer, initialState)
 
@@ -48,25 +48,26 @@ function WorkoutConditions(props) {
   return (
     <li className='collection-header grey darken-3 white-text'>
       <form className='container' onSubmit={handleSubmit}>
-        {Object.keys(conditions)
-          .filter(name => name[0] !== '_')
-          .map((condition, i) => (
-            <NumberInputField
-              key={i}
-              label={
-                conditions[condition]
-                  ? `${formatLabel(condition)}: ${conditions[condition]}`
-                  : formatLabel(condition)
-              }
-              id={condition}
-              onChange={e =>
-                dispatch({
-                  type: condition,
-                  value: e.target.value,
-                })
-              }
-            />
-          ))}
+        {conditions &&
+          Object.keys(conditions)
+            .filter(name => name[0] !== '_')
+            .map((condition, i) => (
+              <NumberInputField
+                key={i}
+                label={
+                  conditions[condition]
+                    ? `${formatLabel(condition)}: ${conditions[condition]}`
+                    : formatLabel(condition)
+                }
+                id={condition}
+                onChange={e =>
+                  dispatch({
+                    type: condition,
+                    value: e.target.value,
+                  })
+                }
+              />
+            ))}
 
         <button className='white-text'>Save</button>
       </form>

@@ -10,34 +10,28 @@ import UserDefinedDataForWorkout from './UserDefinedDataForWorkout'
 import Modal from '../../components/Modal(improved)'
 import Collection from '../../components/Collection'
 
-// Queries
 import getWorkoutById from '../../graphql/queries/getWorkoutById'
-import updateWorkoutCompletion from '../../graphql/mutations/updateWorkoutCompletion'
+import { UPDATE_WORKOUT_COMPLETED_MUTATION } from './Mutations'
 
 // Convert Conditions and UserDefinedData to be in drawers/tabs
 
 function ExecuteWokout(props) {
-  const { loading, workout } = props.getWorkoutById
+  const { loading, Workout: workout } = props.getWorkoutById
   if (loading) {
     return <p>Loading...</p>
   }
-
+  console.log('workout from execute workout:', workout)
   const userId = useContext(UserContext)
   const [done, setDone] = useState(false)
-  const { sets } = workout
+  const { sets, conditions } = workout
   const [skippedSets, setSkippedSets] = useState([])
   const date = new Date()
 
   let modalText = null
 
-  // useEffect(() => {
-  //   props.getWorkoutById.refetch()
-  //   .catch(err => console.log(err))
-  // }, [])
-
-  const nullConditions = Object.keys(workout.conditions).filter(
-    key => workout.conditions[key] === null
-  )
+  const nullConditions = conditions
+    ? Object.keys(workout.conditions).filter(key => workout.conditions[key] === null)
+    : []
 
   const incompleteSets = workout.sets
     .filter(set => !set.completed)
@@ -79,7 +73,7 @@ function ExecuteWokout(props) {
 
   const completeWorkout = () => {
     props
-      .updateWorkoutCompletion({
+      .updateWorkoutCompleted({
         variables: {
           id: workout.id,
           completed: true,
@@ -166,7 +160,7 @@ export default withRouter(
       },
       name: 'getWorkoutById',
     }),
-    graphql(updateWorkoutCompletion, { name: 'updateWorkoutCompletion' })
+    graphql(UPDATE_WORKOUT_COMPLETED_MUTATION, { name: 'updateWorkoutCompleted' })
   )(ExecuteWokout)
 )
 

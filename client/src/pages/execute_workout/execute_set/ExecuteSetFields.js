@@ -1,100 +1,97 @@
-import React, { useReducer } from 'react'
+import React, { useReducer, useState } from 'react'
 import { graphql, compose } from 'react-apollo'
 import formatLabel from '../../../utils/formatInputLabel'
 
 import NumberInputField from '../../../components/NumberInputField'
+import CustomExerciseFieldInput from './CustomExerciseFieldInput'
 
-import updateSetData from '../../../graphql/mutations/updateSetData'
-import addUserDefinedDataToSet from '../../../graphql/mutations/addUserDefinedDataToSet'
-import updateCustomSetData from '../../../graphql/mutations/updateCustomSetData'
+import {
+  UPDATE_SET_DATA_FIELD_MUTATION,
+  // ADD_DATA_FIELD_TO_SET_MUTATION,
+} from './Mutations'
+// import GET_SET_QUERY from '../../../graphql/queries/getSetById'
+import GET_EXERCISE_QUERY from './../../../graphql/queries/getExercise'
 
 function reducer(fields, action) {
-  return {
-    ...fields,
-    [action.name]: { ...fields[action.name], value: Number(action.value) },
+  switch (action.type) {
+    case 'UPDATE_VALUE':
+      return {
+        ...fields,
+        [action.name]: { ...fields[action.name], value: Number(action.value) },
+      }
+    case 'NEW_FIELD':
+      return {
+        ...fields,
+        [action.name]: { id: action.id, value: null },
+      }
+    default:
+      throw new Error('invalid action type on execute set fields reducer')
   }
 }
 
-function ExecuteSetFields({
-  set,
-  updateSetData,
-  addUserDefinedDataToSet,
-  updateCustomSetData,
-}) {
-  const defaultFields = {
-    weight: { value: set.weight },
-    reps: { value: set.reps },
-    time: { value: set.time },
-    notes: { value: set.notes },
-  }
-  const customFields = set.exercise.customFields.map(field => {
-    const value = set.userDefinedData.find(item => item.name === field.name)
-    return {
-      [field.name]: {
-        id: field.id,
-        value: value ? Number(value.datum) : null,
-      },
-    }
-  })
+function ExecuteSetFields({ set, updateSetDataField, getExercise }) {
+  if (getExercise.loading) return null
 
-  let initialState = { ...defaultFields }
-  customFields.forEach(field => (initialState = { ...initialState, ...field }))
+  const [showAddField, setShowAddField] = useState(false)
+  const initialState = [...getExercise.Exercise.fields, ...set.data].reduce(
+    (acc, field) => {
+      return {
+        ...acc,
+        [field.name]: { id: field.id, value: field.value },
+      }
+    },
+    {}
+  )
 
   const [fields, dispatch] = useReducer(reducer, initialState)
 
-  const handleBlur = name => {
-    if (name in defaultFields) {
-      updateSetData({
-        variables: {
-          id: set.id,
-          reps: fields.reps.value,
-          weight: fields.weight.value,
-          time: fields.time.value,
-          notes: fields.notes.value,
-        },
-      }).then(res => console.log(res), err => console.log(err))
-    } else {
-      const prevVal = set.userDefinedData.find(item => item.name === name)
-      if (prevVal) {
-        updateCustomSetData({
-          variables: {
-            id: prevVal.id,
-            datum: fields[name].value,
-          },
-        }).then(res => console.log(res), err => console.log(err))
-      } else {
-        addUserDefinedDataToSet({
-          variables: {
-            setId: set.id,
-            name,
-            datum: fields[name].value,
-          },
-        }).then(res => console.log(res), err => console.log(err))
-      }
-    }
+  const handleBlur = (e, { name, id, value }) => {
+    // gross, fix
+    e.target.value = null
+    e.target.previousSibling.classList.remove('active')
+
+    updateSetDataField({
+      variables: {
+        id,
+        value,
+      },
+    }).then(res => console.log(res), err => console.log(err))
   }
 
   return (
     <>
-      {Object.keys(fields).map(name => (
+      {Object.entries(fields).map(([name, { id, value }]) => (
         <NumberInputField
-          key={name}
+          key={id}
           id={name}
-          label={
-            fields[name].value
-              ? `${formatLabel(name)}: ${fields[name].value}`
-              : formatLabel(name)
-          }
-          onChange={e => dispatch({ name, value: e.target.value })}
-          onBlur={() => handleBlur(name)}
+          label={value ? `${formatLabel(name)}: ${value}` : formatLabel(name)}
+          onChange={e => dispatch({ type: 'UPDATE_VALUE', name, value: e.target.value })}
+          onBlur={e => handleBlur(e, { name, id, value })}
         />
       ))}
+      {showAddField && <CustomExerciseFieldInput dispatch={dispatch} set={set} />}
+      <i
+        className='align-right material-icons grey-text'
+        onClick={() => setShowAddField(!showAddField)}
+      >
+        {showAddField ? 'keyboard_arrow_up' : 'add'}
+      </i>
     </>
   )
 }
 
 export default compose(
-  graphql(updateSetData, { name: 'updateSetData' }),
-  graphql(addUserDefinedDataToSet, { name: 'addUserDefinedDataToSet' }),
-  graphql(updateCustomSetData, { name: 'updateCustomSetData' })
+  graphql(GET_EXERCISE_QUERY, {
+    name: 'getExercise',
+    options: props => {
+      return {
+        variables: {
+          id: props.set.exercise.id,
+        },
+      }
+    },
+  }),
+  // graphql(GET_SET_QUERY, { name: 'get set' }),
+  graphql(UPDATE_SET_DATA_FIELD_MUTATION, { name: 'updateSetDataField' })
+  // graphql(ADD_DATA_FIELD_TO_SET_MUTATION, { name: 'addDataFieldToSet' })
 )(ExecuteSetFields)

@@ -16,10 +16,10 @@ function reducer(state, action) {
 }
 
 function UserDefinedDataForWorkout(props) {
-  const { loading, workout } = props.getWorkoutById
+  const { loading, Workout: workout } = props.getWorkoutById
   if (loading) return <p>Loading...</p>
 
-  const { userDefinedData: data } = workout
+  const { data } = workout
   const initialState = data.reduce(
     (a, v) => ({ ...a, [v.id]: { name: v.name, datum: v.datum } }),
     {}

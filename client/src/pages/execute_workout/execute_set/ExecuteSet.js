@@ -4,7 +4,6 @@ import { withRouter } from 'react-router-dom'
 
 // Components
 import ExecuteSetFields from './ExecuteSetFields'
-import CustomExerciseFieldInput from './CustomExerciseFieldInput'
 import Checkbox from './Checkbox'
 
 // Queries
@@ -13,10 +12,9 @@ import getSetById from '../../../graphql/queries/getSetById'
 function ExecuteSet({ set, getSetById, skip }) {
   if (getSetById.loading) return null
 
-  const [completed, setCompleted] = useState(getSetById.set.completed)
+  const [completed, setCompleted] = useState(getSetById.Set.completed)
   const [skipped, setSkipped] = useState(false)
   const [showExerciseDetails, setShowExerciseDetails] = useState(false)
-  const [showAddField, setShowAddField] = useState(false)
 
   return (
     <li className='collection-item'>
@@ -60,15 +58,6 @@ function ExecuteSet({ set, getSetById, skip }) {
       <div className='row'>
         <ExecuteSetFields set={set} />
       </div>
-
-      {showAddField && <CustomExerciseFieldInput exercise={set.exercise} />}
-
-      <i
-        className='align-right material-icons grey-text'
-        onClick={() => setShowAddField(!showAddField)}
-      >
-        {showAddField ? 'keyboard_arrow_up' : 'add'}
-      </i>
     </li>
   )
 }
