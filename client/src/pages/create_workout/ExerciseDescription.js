@@ -7,7 +7,6 @@ import Loader from '../../components/Loader'
 import getExerciseQuery from '../../graphql/queries/getExercise'
 import updateExerciseName from '../../graphql/mutations/updateExerciseName'
 import updateExerciseDescription from '../../graphql/mutations/updateExerciseDescription'
-import getExercisesForUserQuery from '../../graphql/queries/getExercisesForUser'
 
 function ExerciseDescription(props) {
   const { loading, Exercise: exercise } = props.data
@@ -32,7 +31,7 @@ function ExerciseDescription(props) {
           description: e.target.textContent,
           id: props.exerciseId,
         },
-        refetchQueries: [{ query: getExercisesForUserQuery }],
+        refetchQueries: ['GET_USER_QUERY'],
       })
       .catch(err => console.log(err))
   }

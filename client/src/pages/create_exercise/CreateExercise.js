@@ -10,12 +10,12 @@ import Loader from '../../components/Loader'
 import Success from './Success'
 import Wrapper from '../../components/SuccessWrapper'
 
-// Queries
-import CREATE_EXERCISE_MUTATION from '../../graphql/mutations/createExercise'
-import CREATE_EXERCISE_FIELD_MUTATION from '../../graphql/mutations/createExerciseField'
-import ADD_EXERCISE_TO_USER_MUTATION from '../../graphql/mutations/addExerciseToUser'
-import ADD_FIELDS_TO_EXERCISE_MUTATION from '../../graphql/mutations/addFieldsToExercise'
-// import getExercisesForUser from '../../graphql/queries/getExercisesForUser'
+import {
+  CREATE_EXERCISE_MUTATION,
+  CREATE_EXERCISE_FIELD_MUTATION,
+  ADD_EXERCISE_TO_USER_MUTATION,
+  ADD_FIELDS_TO_EXERCISE_MUTATION,
+} from './Mutations'
 
 function CreateExercise(props) {
   const [name, setName] = useState(null)
@@ -89,22 +89,6 @@ function CreateExercise(props) {
         err => console.log(err)
       )
   }
-  //   props
-  //     .addExercise({
-  //       variables: {
-  //         name,
-  //         description,
-  //         userId: props.userId,
-  //       },
-  //       refetchQueries: [{ query: getExercisesForUser }],
-  //     })
-  //     .then(
-  //       res => {
-  //         setNewExercise(res.data.addExercise)
-  //       },
-  //       err => console.log(err)
-  //     )
-  // }
 
   if (done) {
     props.history.goBack()
