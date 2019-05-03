@@ -1,13 +1,13 @@
 import React from 'react'
 import { graphql, compose } from 'react-apollo'
 import ContentEditable from 'react-contenteditable'
-import Loader from './Loader'
+import Loader from '../../components/Loader'
 
 // Queries
-import getExerciseQuery from '../graphql/queries/getExercise'
-import updateExerciseName from '../graphql/mutations/updateExerciseName'
-import updateExerciseDescription from '../graphql/mutations/updateExerciseDescription'
-import getExercisesForUserQuery from '../graphql/queries/getExercisesForUser'
+import getExerciseQuery from '../../graphql/queries/getExercise'
+import updateExerciseName from '../../graphql/mutations/updateExerciseName'
+import updateExerciseDescription from '../../graphql/mutations/updateExerciseDescription'
+import getExercisesForUserQuery from '../../graphql/queries/getExercisesForUser'
 
 function ExerciseDescription(props) {
   const { loading, Exercise: exercise } = props.data

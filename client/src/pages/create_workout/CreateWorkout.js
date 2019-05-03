@@ -4,8 +4,8 @@ import { withRouter, Link, Redirect } from 'react-router-dom'
 
 // Components
 import ExerciseList from './ExerciseList'
-import ExerciseDescription from '../../components/ExerciseDescription'
-import CreateSetButtonsPanel from '../../components/CreateSetButtonsPanel'
+import ExerciseDescription from './ExerciseDescription'
+import CreateSetButtonsPanel from './create_set/CreateSetButtonsPanel'
 import Workout from '../display_workout/Workout'
 
 import getUserById from '../../graphql/queries/getUserById'

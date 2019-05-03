@@ -6,7 +6,6 @@ import '../../ListTransitions.css'
 
 import Modal from '../../components/Modal(improved)'
 
-// Queries
 import getUserById from '../../graphql/queries/getUserById'
 import { DELETE_EXERCISE_MUTATION } from './Mutations'
 

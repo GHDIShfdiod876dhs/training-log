@@ -14,7 +14,7 @@ export default ({ userId: id }) => (
       return (
         <div className='container'>
           <h1>Welcome back, {User.name}!</h1>
-          <TodaysWorkout workouts={User.workouts} />
+          <TodaysWorkout workouts={User.workouts || []} />
         </div>
       )
     }}

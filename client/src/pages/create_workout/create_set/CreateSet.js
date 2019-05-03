@@ -3,7 +3,7 @@ import { graphql } from 'react-apollo'
 import { withRouter, Redirect } from 'react-router-dom'
 
 // Components
-import ExerciseDescription from '../../../components/ExerciseDescription'
+import ExerciseDescription from '../ExerciseDescription'
 import NumberInputField from '../../../components/NumberInputField'
 import TextAreaField from '../../../components/TextAreaField'
 

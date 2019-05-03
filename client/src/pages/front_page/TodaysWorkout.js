@@ -1,72 +1,45 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 
+import Workout from '../display_workout/Workout'
 
-function TodaysWorkout({ workouts }) {
-
+export default ({ workouts }) => {
   const getWorkoutsForToday = workouts => {
-    return workouts.filter(
-      workout => isToday(workout.date) && !workout.completed
-    )
+    return workouts.filter(workout => isToday(workout.date) && !workout.completed)
 
-    function isToday(someDate) {
-      someDate = new Date(Number(someDate))
+    function isToday(date) {
+      date = new Date(+date)
       const today = new Date()
 
-      return someDate.getDate() === today.getDate() &&
-        someDate.getMonth() === today.getMonth() &&
-        someDate.getFullYear() === today.getFullYear()
+      return (
+        date.getDate() === today.getDate() &&
+        date.getMonth() === today.getMonth() &&
+        date.getFullYear() === today.getFullYear()
+      )
     }
   }
 
   const workoutsForToday = getWorkoutsForToday(workouts)
   const multiple = workoutsForToday.length > 1
 
-  const todaysSets = (workoutForToday) => {
-    let { sets } = workoutForToday
-    if (sets) {
-      return sets.map(set => (
-        <li key={ set.id }>
-          { set.exercise.name } { set.weight && set.weight } x { set.reps }
-        </li>
-      )
-    )}
-  }
-
-  if (workoutsForToday.length) {
-    return (
-      <div className="container">
-        <h1>Today's Workout{ multiple && 's' }:</h1>
-        <div>{
-          workoutsForToday.map(workout => (
-            <div className="card grey lighten-3" key={workout.id}>
-              <div className="card-content">
-                <p>{ workout.description }</p>
-                <ul>
-                  { todaysSets(workout) }
-                </ul>
-              </div>
-              <div className="card-action">
-                <Link to={ `/workout/${workout.id}` }>
-                  Let's go!
-                </Link>
-              </div>
-            </div>           
-          ))
-        }</div>
-      </div>
-    )
-  }
-  else {
-    return (
-      <div className="card grey lighten-3">
-        <div className="card-content">
-          <h1 className="card-title">No workout scheduled today</h1>
+  return (
+    <>
+      {workoutsForToday.length ? (
+        <h3>Today's Workout{multiple && 's'}:</h3>
+      ) : (
+        <h5>No workout scheduled today</h5>
+      )}
+      {workoutsForToday.map(workout => (
+        <div className='card grey lighten-3' key={workout.id}>
+          <div className='card-content'>
+            <p>{workout.description}</p>
+            <Workout workoutId={workout.id} />
+          </div>
+          <div className='card-action'>
+            <Link to={`/workout/${workout.id}`}>Let's go!</Link>
+          </div>
         </div>
-      </div>
-    )
-  }
+      ))}
+    </>
+  )
 }
-
-
-export default TodaysWorkout
