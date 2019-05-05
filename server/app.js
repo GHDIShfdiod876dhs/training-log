@@ -3,6 +3,7 @@ const mongoose = require('mongoose')
 const graphqlHTTP = require('express-graphql')
 const schema = require('./schema/schema')
 const cors = require('cors')
+const connectString = require('./connectString')
 
 const app = express()
 
@@ -15,7 +16,7 @@ mongoose.set('useNewUrlParser', true)
 mongoose.set('useFindAndModify', false)
 
 // connect to mongoDB Atlas database
-mongoose.connect('mongodb+srv://Chris:92DDTEtsqGjLiPc@traininglog0-k570t.mongodb.net/test?retryWrites=true')
+mongoose.connect(connectString)
 
 mongoose.connection.once('open', () => {
   console.log('You are connected to the database')
