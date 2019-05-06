@@ -25,7 +25,7 @@ function WorkoutScheduled({
   const removeWorkout = id => {
     deleteWorkout({
       variables: { id },
-      refetchQueries: [{ query: getUserById }],
+      refetchQueries: ['GET_USER_QUERY'],
     }).then(
       ({ data: { deleteWorkout } }) => {
         console.log('deleted:', deleteWorkout)

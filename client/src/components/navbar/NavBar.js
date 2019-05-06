@@ -16,6 +16,7 @@ export default withRouter(props => {
   const links = [
     { to: '/create/program', text: 'Start a new Program' },
     { to: '/create/exercise', text: 'Create a new exercise' },
+    { to: '/workouts', text: 'My workouts' },
   ]
 
   return (

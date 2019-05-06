@@ -1,7 +1,6 @@
-import React, { useState, useContext } from 'react'
+import React, { useState } from 'react'
 import { graphql, compose } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
-import UserContext from '../../contexts/UserContext'
 
 // Components
 import ExecuteSet from './execute_set/ExecuteSet'
@@ -20,8 +19,10 @@ function ExecuteWokout(props) {
   if (loading) {
     return <p>Loading...</p>
   }
-  console.log('workout from execute workout:', workout)
-  const userId = useContext(UserContext)
+
+  console.log(workout)
+
+  const userId = workout.user.id
   const [done, setDone] = useState(false)
   const { sets, conditions } = workout
   const [skippedSets, setSkippedSets] = useState([])
@@ -123,8 +124,13 @@ function ExecuteWokout(props) {
         }
         items={
           <>
-            {sets.map(set => (
-              <ExecuteSet key={set.id} set={set} skip={updateSkippedSets} />
+            {sets.map((set, idx) => (
+              <ExecuteSet
+                key={set.id}
+                number={idx + 1}
+                set={set}
+                skip={updateSkippedSets}
+              />
             ))}
             <UserDefinedDataForWorkout workout={workout} />
           </>

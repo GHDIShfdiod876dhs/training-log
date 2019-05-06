@@ -7,7 +7,7 @@ import NumberInputField from '../../components/NumberInputField'
 
 // Queries
 import getWorkoutById from '../../graphql/queries/getWorkoutById'
-import updateConditions from '../../graphql/mutations/updateConditions'
+import { UPDATE_CONDITIONS_MUTATION } from './Mutations'
 
 function reducer(state, action) {
   return {
@@ -26,21 +26,30 @@ function WorkoutConditions(props) {
   const initialState = conditions
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  useEffect(() => {
-    props.getWorkoutById.refetch().catch(err => console.log(err))
-  }, [])
-
   const handleSubmit = e => {
     e.preventDefault()
+    e.target.value = null
+    Array.from(e.target.children).forEach(child => {
+      const label = child.firstChild
+      const field = label.nextSibling
+      if (label && label.nodeName === 'LABEL') {
+        label.classList.remove('active')
+        field.blur()
+        field.value = null
+      }
+    })
     props
       .updateConditions({
         variables: {
           ...state,
-          workoutId: props.workout.id,
+          id: props.workout.conditions.id,
         },
+        refetchQueries: ['GET_WORKOUT_QUERY'],
       })
       .then(
-        () => {}, //props.setConditionsVisible(false),
+        res => {
+          console.log(res)
+        }, //props.setConditionsVisible(false),
         err => console.log(err)
       )
   }
@@ -50,7 +59,7 @@ function WorkoutConditions(props) {
       <form className='container' onSubmit={handleSubmit}>
         {conditions &&
           Object.keys(conditions)
-            .filter(name => name[0] !== '_')
+            .filter(name => name[0] !== '_' && name !== 'id')
             .map((condition, i) => (
               <NumberInputField
                 key={i}
@@ -86,5 +95,5 @@ export default compose(
     },
     name: 'getWorkoutById',
   }),
-  graphql(updateConditions, { name: 'updateConditions' })
+  graphql(UPDATE_CONDITIONS_MUTATION, { name: 'updateConditions' })
 )(WorkoutConditions)

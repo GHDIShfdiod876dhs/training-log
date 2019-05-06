@@ -18,7 +18,7 @@ export default withApollo(({ client }) => {
   const emailInput = { type: 'email', node: null },
     passwordInput = { type: 'password', node: null }
 
-  const [loggedIn, setLoggedIn] = useState(!!client.cache.USER_ID)
+  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('id'))
 
   if (loggedIn) return <Redirect to='./' />
 

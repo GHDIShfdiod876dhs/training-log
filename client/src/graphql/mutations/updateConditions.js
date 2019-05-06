@@ -2,6 +2,7 @@ import { gql } from 'apollo-boost'
 
 export const conditionsFieldsFragment = gql`
   fragment conditionsFields on Conditions {
+    id
     sleep
     nutrition
     stress

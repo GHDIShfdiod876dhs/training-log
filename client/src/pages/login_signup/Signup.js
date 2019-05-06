@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { gql } from 'apollo-boost'
 import { Mutation, withApollo } from 'react-apollo'
-import { Redirect } from 'react-router-dom'
-import Form from './Form'
+import { Redirect, Link } from 'react-router-dom'
 import Loader from '../../components/Loader'
 
 const SIGNUP_USER = gql`
@@ -15,17 +14,13 @@ const SIGNUP_USER = gql`
 `
 
 export default withApollo(({ client }) => {
-  const emailInput = { type: 'email' },
-    nameInput = { type: 'text', label: 'name' },
-    passwordInput = { type: 'password', new: true },
-    confirmPasswordInput = {
-      type: 'password',
-      label: 'confirm password',
-      new: true,
-    }
+  const [email, setEmail] = useState('')
+  const [name, setName] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   const [error, setError] = useState(null)
-  const [loggedIn, setLoggedIn] = useState(!!client.cache.USER_ID)
+  const [loggedIn, setLoggedIn] = useState(!!localStorage.getItem('id'))
 
   if (loggedIn) return <Redirect to='./' />
 
@@ -34,35 +29,103 @@ export default withApollo(({ client }) => {
       {(signupUser, { loading }) => {
         const handleSubmit = e => {
           e.preventDefault()
-          if (passwordInput.value !== confirmPasswordInput.value) {
+          if (password !== confirmPassword) {
             setError("Passwords don't match!")
             return
           }
           signupUser({
             variables: {
-              email: emailInput.value,
-              name: nameInput.value,
-              password: passwordInput.value,
+              email,
+              name,
+              password,
             },
           }).then(
             ({ data: { signupUser } }) => {
-              emailInput.value = nameInput.value = passwordInput.value = null
+              setEmail('')
+              setName('')
+              setPassword('')
+              setConfirmPassword('')
               localStorage.setItem('id', signupUser.id)
               localStorage.setItem('token', signupUser.token)
               setLoggedIn(true)
             },
-            err => console.log(err)
+            err => {
+              console.log(err.message)
+              if (err.message.includes('Email already in use')) {
+                setError('Email already in use')
+              }
+            }
           )
         }
         if (loading) return <Loader />
         return (
           <div className='container'>
-            {error && <h3>{error}</h3>}
-            <Form
-              handleSubmit={handleSubmit}
-              inputs={[emailInput, nameInput, passwordInput, confirmPasswordInput]}
-              buttonText='Sign up'
-            />
+            {error && <h5>{error}</h5>}
+            <form onSubmit={handleSubmit}>
+              <div className='input-field'>
+                <label htmlFor='email' className={email && 'active'}>
+                  Email
+                </label>
+                <input
+                  required
+                  id='email'
+                  type='email'
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  autoComplete='username'
+                />
+              </div>
+
+              <div className='input-field'>
+                <label htmlFor='name' className={name && 'active'}>
+                  Name
+                </label>
+                <input
+                  required
+                  id='name'
+                  type='text'
+                  value={name}
+                  onChange={e => setName(e.target.value)}
+                />
+              </div>
+
+              <div className='input-field'>
+                <label htmlFor='password' className={password && 'active'}>
+                  Password
+                </label>
+                <input
+                  required
+                  id='password'
+                  type='password'
+                  value={password}
+                  onChange={e => setPassword(e.target.value)}
+                  autoComplete='new-password'
+                />
+              </div>
+
+              <div className='input-field'>
+                <label htmlFor='confirm' className={confirmPassword && 'active'}>
+                  Confirm password
+                </label>
+                <input
+                  required
+                  id='confirm'
+                  type='password'
+                  value={confirmPassword}
+                  onChange={e => setConfirmPassword(e.target.value)}
+                  autoComplete='new-password'
+                />
+              </div>
+              <button className='btn red darken-3' type='submit'>
+                Submit
+              </button>
+            </form>
+            <p>
+              Already have an account?
+              <Link className='btn-flat' to='./signin'>
+                Log in here
+              </Link>
+            </p>
           </div>
         )
       }}

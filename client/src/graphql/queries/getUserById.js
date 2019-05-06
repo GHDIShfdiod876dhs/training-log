@@ -15,7 +15,7 @@ export default gql`
         name
         # startDate
       }
-      workouts {
+      workouts(orderBy: date_ASC) {
         ...workoutFields
       }
       exercises {

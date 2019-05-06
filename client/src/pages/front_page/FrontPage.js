@@ -14,7 +14,6 @@ export default ({ userId: id }) => {
     <Query query={GET_USER_QUERY} variables={{ id }}>
       {({ loading, data: { User } }) => {
         if (loading) return <Loader />
-        console.log(lastLocation)
         return (
           <div className='container'>
             <h1>

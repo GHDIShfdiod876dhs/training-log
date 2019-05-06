@@ -9,7 +9,7 @@ import Checkbox from './Checkbox'
 // Queries
 import getSetById from '../../../graphql/queries/getSetById'
 
-function ExecuteSet({ set, getSetById, skip }) {
+function ExecuteSet({ set, getSetById, number, skip }) {
   if (getSetById.loading) return null
 
   const [completed, setCompleted] = useState(getSetById.Set.completed)
@@ -32,7 +32,7 @@ function ExecuteSet({ set, getSetById, skip }) {
 
       <div className='row valign-wrapper'>
         <div className='col s2 pull-s1'>
-          {set.number}
+          {number}
           <Checkbox set={set} completed={completed} setCompleted={setCompleted} />
         </div>
 

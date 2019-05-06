@@ -5,6 +5,7 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import { LastLocationProvider } from 'react-router-last-location'
 import NavBar from './components/navbar/NavBar'
 import Routes from './Routes'
+import ErrorBoundary from './components/ErrorBoundary'
 
 // // Set up Apollo client
 const client = new ApolloClient({
@@ -24,11 +25,13 @@ function App() {
     <ApolloProvider client={client}>
       <Router>
         <LastLocationProvider>
-          <div id='main' className='App'>
-            <NavBar />
-          </div>
+          <ErrorBoundary>
+            <div id='main' className='App'>
+              <NavBar />
+            </div>
 
-          <Routes />
+            <Routes />
+          </ErrorBoundary>
         </LastLocationProvider>
       </Router>
     </ApolloProvider>

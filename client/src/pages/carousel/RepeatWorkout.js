@@ -1,83 +1,50 @@
 import React from 'react'
-import { compose, graphql } from 'react-apollo'
+import { Mutation } from 'react-apollo'
 
-import addWorkoutToUser from '../../graphql/mutations/addWorkoutToUser'
-import addSet from '../../graphql/mutations/addSet'
-import addUserDefinedDataToSet from '../../graphql/mutations/addUserDefinedDataToSet'
-import addUserDefinedDataToWorkout from '../../graphql/mutations/addUserDefinedDataToWorkout'
+import REPEAT_WORKOUT_MUTATION from './Mutations'
 
-const repeatWorkout = ({
-  workout,
-  history,
-  addWorkoutToUser,
-  addSet,
-  addUserDefinedDataToSet,
-}) => {
-  let newWorkoutId
-  const handleClick = () => {
-    addWorkoutToUser({
-      variables: {
-        date: new Date(),
-        description: workout.description,
-        userId: workout.userId,
-      },
-    })
-      .then(({ data }) => {
-        newWorkoutId = data.addWorkoutToUser.id
-        const ps = []
-        for (let set of workout.sets) {
-          ps.push(
-            addSet({
+export default ({ workout, history }) => {
+  const clonedWorkoutData = workout.data.map(x => ({
+    name: x.name,
+    value: x.value,
+    unit: x.unit,
+  }))
+
+  const clonedSets = workout.sets.map(x => ({
+    number: x.number,
+    notes: x.notes,
+    completed: false,
+    exerciseId: x.exercise.id,
+    data: x.data.map(y => ({ name: y.name, value: y.value })),
+  }))
+
+  return (
+    <Mutation mutation={REPEAT_WORKOUT_MUTATION}>
+      {repeatWorkout => (
+        <span
+          onClick={() => {
+            repeatWorkout({
               variables: {
-                number: set.number,
-                reps: set.reps,
-                weight: set.weight,
-                time: set.time,
-                notes: set.notes,
-                exerciseId: set.exercise.id,
-                workoutId: newWorkoutId,
+                date: new Date(),
+                description: workout.description,
+                userId: workout.user.id,
+                programId: null, // get current program
+                data: clonedWorkoutData,
+                sets: clonedSets,
               },
-            }).then(res =>
-              copyCustomData(res, 'addSet', addUserDefinedDataToSet, set.userDefinedData)
+            }).then(
+              ({
+                data: {
+                  createWorkout: { id },
+                },
+              }) => history.push(`/workout/${id}`),
+              err => console.log(err)
             )
-          )
-        }
-        return Promise.all(ps)
-      })
-      .then(res =>
-        copyCustomData(
-          res,
-          'addWorkoutToUser',
-          addUserDefinedDataToWorkout,
-          workout.userDefinedData
-        )
-      )
-      .then(() => history.push(`/workout/${newWorkoutId}`), err => console.log(err))
-  }
-
-  return <span onClick={handleClick}>Repeat this workout</span>
-}
-
-export default compose(
-  graphql(addWorkoutToUser, { name: 'addWorkoutToUser' }),
-  graphql(addSet, { name: 'addSet' }),
-  graphql(addUserDefinedDataToSet, { name: 'addUserDefinedDataToSet' }),
-  graphql(addUserDefinedDataToWorkout, { name: 'addUserDefinedDataToWorkout' })
-)(repeatWorkout)
-
-function copyCustomData({ data }, prevOp, nextOp, iterable) {
-  const ps = []
-  const { id } = data[prevOp]
-  for (let field of iterable) {
-    ps.push(
-      nextOp({
-        variables: {
-          name: field.name,
-          datum: field.datum,
-          setId: id,
-        },
-      })
-    )
-  }
-  return Promise.all(ps)
+          }}
+        >
+          Repeat this workout
+        </span>
+      )}
+    </Mutation>
+  )
 }
