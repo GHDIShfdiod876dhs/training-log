@@ -6,10 +6,11 @@ import { LastLocationProvider } from 'react-router-last-location'
 import NavBar from './components/navbar/NavBar'
 import Routes from './Routes'
 import ErrorBoundary from './components/ErrorBoundary'
+import { graphcoolUri } from './keys'
 
 // // Set up Apollo client
 const client = new ApolloClient({
-  uri: 'https://api.graph.cool/simple/v1/cjv06d4h4017f0176envsbvmi',
+  uri: graphcoolUri,
   request: operation => {
     const token = localStorage.getItem('token')
     operation.setContext({
