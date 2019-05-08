@@ -20,8 +20,6 @@ function ExecuteWokout(props) {
     return <p>Loading...</p>
   }
 
-  console.log(workout)
-
   const userId = workout.user.id
   const [done, setDone] = useState(false)
   const { sets, conditions } = workout

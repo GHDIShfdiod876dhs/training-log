@@ -16,7 +16,7 @@ function Set({ editable, set, setNumber, deleteSet, numSets, setNumSets }) {
   const displayData = ({ id, name, value }) => {
     if (value) {
       return (
-        <div className='col s4 l2' key={id}>
+        <div key={id} style={{ margin: '1rem' }}>
           <p>{formatLabel(name)}:</p>
           <p>{value}</p>
         </div>
@@ -39,7 +39,16 @@ function Set({ editable, set, setNumber, deleteSet, numSets, setNumSets }) {
           )}
         </div>
       </div>
-      <div className='row'>{data.map(displayData)}</div>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}
+      >
+        {data.map(displayData)}
+      </div>
       <div className='row'>{notes && `Notes: ${notes}`}</div>
     </li>
   )
