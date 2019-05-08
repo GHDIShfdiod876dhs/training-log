@@ -74,7 +74,13 @@ function AddCustomExerciseFields(props) {
         onChange={e => setNewField(e.target.value)}
       />
 
-      {newField == null ? <button disabled>Save</button> : <button>Save</button>}
+      {newField == null ? (
+        <button className='btn-flat ' disabled>
+          Save
+        </button>
+      ) : (
+        <button className='btn-flat'>Save</button>
+      )}
     </form>
   )
 }

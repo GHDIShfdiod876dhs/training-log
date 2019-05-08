@@ -65,6 +65,7 @@ function WorkoutConditions(props) {
                   )}
                 </label>
                 <input
+                  className='white-text'
                   type='number'
                   id={condition}
                   onChange={e =>
@@ -77,7 +78,7 @@ function WorkoutConditions(props) {
               </div>
             ))}
 
-        <button className='white-text'>Save</button>
+        <button className='btn-flat white-text'>Save</button>
       </form>
     </li>
   )

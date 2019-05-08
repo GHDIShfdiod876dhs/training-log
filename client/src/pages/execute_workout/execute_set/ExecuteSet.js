@@ -31,12 +31,14 @@ function ExecuteSet({ set, getSetById, number, skip }) {
       )}
 
       <div className='row valign-wrapper'>
-        <div className='col s2 pull-s1'>
-          {number}
-          <Checkbox set={set} completed={completed} setCompleted={setCompleted} />
+        <div className='col s2 pull-s1 l3'>
+          <span className='row valign-wrapper'>
+            <Checkbox set={set} completed={completed} setCompleted={setCompleted} />
+            {number}
+          </span>
         </div>
 
-        <div className='col s9'>
+        <div className='col s9 l8 pull-l1'>
           <h6 onClick={() => setShowExerciseDetails(!showExerciseDetails)}>
             {set.exercise.name}
           </h6>

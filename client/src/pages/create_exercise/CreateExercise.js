@@ -23,8 +23,6 @@ function CreateExercise(props) {
   const [success, setSuccess] = useState(false)
   const [done, setDone] = useState(false)
 
-  console.log(fields)
-
   const handleSubmit = e => {
     e.preventDefault()
     setLoading(true)

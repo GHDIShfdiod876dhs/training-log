@@ -7,10 +7,10 @@ import ExerciseList from './ExerciseList'
 import ExerciseDescription from './ExerciseDescription'
 import CreateSetButtonsPanel from './create_set/CreateSetButtonsPanel'
 import Workout from '../display_workout/Workout'
+import AddCustomFieldsToWorkout from './AddCustomDataToWorkout'
 
 import getUserById from '../../graphql/queries/getUserById'
 import getWorkoutById from '../../graphql/queries/getWorkoutById'
-import AddCustomFieldsToWorkout from './AddCustomDataToWorkout'
 
 function CreateWorkout(props) {
   if (props.getUserById.loading || props.getWorkoutById.loading) {
