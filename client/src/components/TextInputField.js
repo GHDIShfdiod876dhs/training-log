@@ -1,26 +1,15 @@
 import React from 'react'
 
-
-function TextInputField({ icon, id, label, onChange }) {
-  
+function TextInputField({ icon, id, label, onChange, required }) {
   return (
-    <div className="input-field">
-      { 
-        icon &&
-        <i className="material-icons prefix">{ icon }</i>
-      }
+    <div className='input-field'>
+      {icon && <i className='material-icons prefix'>{icon}</i>}
 
-      <label htmlFor={ id }>{ label }</label>
-      
-      <input
-        id={ id }
-        type="text"
-        onChange={ onChange }
-      >
-      </input>
+      <label htmlFor={id}>{label}</label>
+
+      <input required={required} id={id} type='text' onChange={onChange} />
     </div>
   )
 }
-
 
 export default TextInputField

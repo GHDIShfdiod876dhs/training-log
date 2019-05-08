@@ -53,6 +53,7 @@ function CreateProgram({ createProgram, userId }) {
     <div className='container'>
       <form onSubmit={handleSubmit}>
         <TextInputField
+          required
           id='program-name'
           label='Give your new program a name:'
           onChange={e => setName(e.target.value)}

@@ -71,6 +71,7 @@ function CreateExercise(props) {
       <>
         <form className='container' onSubmit={handleSubmit}>
           <TextInputField
+            required
             id='exercise-name'
             label='Name'
             onChange={e => setName(e.target.value)}
