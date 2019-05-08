@@ -8,7 +8,7 @@ export default props => (
         {props.children}
       </div>
       <div className='card-action'>
-        <button className='btn-flat' onClick={props.setDone}>
+        <button className='btn-flat white-text' onClick={props.setDone}>
           Done
         </button>
       </div>

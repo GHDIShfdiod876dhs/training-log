@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { graphql, compose } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { Redirect } from 'react-router-dom'
 
 // Components
@@ -9,11 +9,9 @@ import Loader from '../../components/Loader'
 import Success from './Success'
 import Wrapper from '../../components/SuccessWrapper'
 
-// Queries
-// import addProgram from '../../graphql/mutations/addProgram'
-import { ADD_PROGRAM_TO_USER_MUTATION, CREATE_PROGRAM_MUTATION } from './Mutations'
+import CREATE_PROGRAM_MUTATION from './Mutations'
 
-function CreateProgram({ createProgram, addProgramToUser, userId }) {
+function CreateProgram({ createProgram, userId }) {
   const [name, setName] = useState(null)
   const [description, setDescription] = useState(null)
   const [newProgram, setNewProgram] = useState(null)
@@ -30,30 +28,17 @@ function CreateProgram({ createProgram, addProgramToUser, userId }) {
       variables: {
         name,
         description,
+        userId,
       },
-    })
-      .then(({ data: { createProgram: { id: programId } } }) => {
-        // console.log(res)
-        return addProgramToUser({
-          variables: {
-            userId,
-            programId, //: res.data.createProgram.id,
-          },
-        })
-      })
-      .then(
-        ({
-          data: {
-            addToUserPrograms: { programsProgram: newProgram },
-          },
-        }) => {
-          console.log(newProgram)
-          setLoading(false)
-          setNewProgram(newProgram)
-          setSuccess(true)
-        },
-        err => console.log(err)
-      )
+    }).then(
+      ({ data: { createProgram: newProgram } }) => {
+        console.log(newProgram)
+        setLoading(false)
+        setNewProgram(newProgram)
+        setSuccess(true)
+      },
+      err => console.log(err)
+    )
   }
 
   if (done) return <Redirect to='/' />
@@ -81,13 +66,8 @@ function CreateProgram({ createProgram, addProgramToUser, userId }) {
 
         <button className='btn red darken-3'>Create!</button>
       </form>
-
-      {/* <button onClick={() => setDone(true)}>Home</button> */}
     </div>
   )
 }
 
-export default compose(
-  graphql(CREATE_PROGRAM_MUTATION, { name: 'createProgram' }),
-  graphql(ADD_PROGRAM_TO_USER_MUTATION, { name: 'addProgramToUser' })
-)(CreateProgram)
+export default graphql(CREATE_PROGRAM_MUTATION, { name: 'createProgram' })(CreateProgram)
