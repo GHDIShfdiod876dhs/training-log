@@ -1,9 +1,14 @@
 import React from 'react'
 import { Mutation } from 'react-apollo'
+import moment from 'moment'
 
 import REPEAT_WORKOUT_MUTATION from './Mutations'
 
 export default ({ workout, history }) => {
+  const date = moment()
+    .valueOf()
+    .toString()
+
   const clonedWorkoutData = workout.data.map(x => ({
     name: x.name,
     value: x.value,
@@ -25,7 +30,7 @@ export default ({ workout, history }) => {
           onClick={() => {
             repeatWorkout({
               variables: {
-                date: new Date(),
+                date,
                 description: workout.description,
                 userId: workout.user.id,
                 programId: null, // get current program
