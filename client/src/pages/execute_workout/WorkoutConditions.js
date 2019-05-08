@@ -1,11 +1,7 @@
-import React, { useEffect, useReducer } from 'react'
+import React, { useRef, useReducer } from 'react'
 import { graphql, compose } from 'react-apollo'
 import formatLabel from '../../utils/formatInputLabel'
 
-// Components
-import NumberInputField from '../../components/NumberInputField'
-
-// Queries
 import getWorkoutById from '../../graphql/queries/getWorkoutById'
 import { UPDATE_CONDITIONS_MUTATION } from './Mutations'
 
@@ -25,19 +21,17 @@ function WorkoutConditions(props) {
   const { conditions } = props.getWorkoutById.Workout
   const initialState = conditions
   const [state, dispatch] = useReducer(reducer, initialState)
+  const fields = useRef([])
 
   const handleSubmit = e => {
     e.preventDefault()
-    e.target.value = null
-    Array.from(e.target.children).forEach(child => {
-      const label = child.firstChild
-      const field = label.nextSibling
-      if (label && label.nodeName === 'LABEL') {
-        label.classList.remove('active')
-        field.blur()
-        field.value = null
-      }
+
+    fields.current.forEach(field => {
+      field.children[0].classList.remove('active')
+      field.children[1].blur()
+      field.children[1].value = ''
     })
+
     props
       .updateConditions({
         variables: {
@@ -46,12 +40,7 @@ function WorkoutConditions(props) {
         },
         refetchQueries: ['GET_WORKOUT_QUERY'],
       })
-      .then(
-        res => {
-          console.log(res)
-        }, //props.setConditionsVisible(false),
-        err => console.log(err)
-      )
+      .then(res => console.log(res), err => console.log(err))
   }
 
   return (
@@ -61,21 +50,31 @@ function WorkoutConditions(props) {
           Object.keys(conditions)
             .filter(name => name[0] !== '_' && name !== 'id')
             .map((condition, i) => (
-              <NumberInputField
+              <div
                 key={i}
-                label={
-                  conditions[condition]
-                    ? `${formatLabel(condition)}: ${conditions[condition]}`
-                    : formatLabel(condition)
-                }
-                id={condition}
-                onChange={e =>
-                  dispatch({
-                    type: condition,
-                    value: e.target.value,
-                  })
-                }
-              />
+                ref={node => (fields.current[i] = node)}
+                className='input-field'
+              >
+                <label htmlFor={condition}>
+                  {formatLabel(condition)}
+                  {conditions[condition] && (
+                    <>
+                      <span>: </span>
+                      <span className='white-text'>{conditions[condition]}</span>
+                    </>
+                  )}
+                </label>
+                <input
+                  type='number'
+                  id={condition}
+                  onChange={e =>
+                    dispatch({
+                      type: condition,
+                      value: e.target.value,
+                    })
+                  }
+                />
+              </div>
             ))}
 
         <button className='white-text'>Save</button>
