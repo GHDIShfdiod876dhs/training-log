@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { graphql, compose } from 'react-apollo'
+import { graphql } from 'react-apollo'
 import { withRouter } from 'react-router-dom'
 
 // Components
@@ -10,12 +10,7 @@ import Loader from '../../components/Loader'
 import Success from './Success'
 import Wrapper from '../../components/SuccessWrapper'
 
-import {
-  CREATE_EXERCISE_MUTATION,
-  CREATE_EXERCISE_FIELD_MUTATION,
-  ADD_EXERCISE_TO_USER_MUTATION,
-  ADD_FIELDS_TO_EXERCISE_MUTATION,
-} from './Mutations'
+import CREATE_EXERCISE_MUTATION from './Mutations'
 
 function CreateExercise(props) {
   const [name, setName] = useState(null)
@@ -28,60 +23,32 @@ function CreateExercise(props) {
   const [success, setSuccess] = useState(false)
   const [done, setDone] = useState(false)
 
+  console.log(fields)
+
   const handleSubmit = e => {
     e.preventDefault()
-    console.log('submitting')
     setLoading(true)
     // create new exercise && create new exercise fields
-    const createdExercise = props.createExercise({
-      variables: {
-        name,
-        description,
-      },
-    })
-
-    const createdFields = fields.map(field =>
-      props.createField({
+    props
+      .createExercise({
         variables: {
-          name: field,
+          name,
+          description,
+          userId: props.userId,
+          fields: fields.map(field => ({ name: field })),
         },
       })
-    )
-
-    Promise.all([createdExercise, ...createdFields])
       .then(
-        // link fields to exercise && link exercise to user
-        ([
-          {
-            data: { createExercise: exercise },
+        ({
+          data: {
+            createExercise: { name, description, fields },
           },
-          ...fields
-        ]) => {
+        }) => {
           setNewExercise({
-            name: exercise.name,
-            description: exercise.description,
-            fields: fields.map(f => f.data.createExerciseField.name),
+            name,
+            description,
+            fields,
           })
-          return Promise.all([
-            props.addExerciseToUser({
-              variables: {
-                exerciseId: exercise.id,
-                userid: props.userId,
-              },
-            }),
-            ...fields.map(({ data: { createExerciseField: field } }) =>
-              props.addFieldsToExercise({
-                variables: {
-                  fieldId: field.id,
-                  exerciseId: exercise.id,
-                },
-              })
-            ),
-          ])
-        }
-      )
-      .then(
-        res => {
           setLoading(false)
           setSuccess(true)
           console.log(newExercise)
@@ -138,10 +105,5 @@ function CreateExercise(props) {
 }
 
 export default withRouter(
-  compose(
-    graphql(CREATE_EXERCISE_MUTATION, { name: 'createExercise' }),
-    graphql(CREATE_EXERCISE_FIELD_MUTATION, { name: 'createField' }),
-    graphql(ADD_EXERCISE_TO_USER_MUTATION, { name: 'addExerciseToUser' }),
-    graphql(ADD_FIELDS_TO_EXERCISE_MUTATION, { name: 'addFieldsToExercise' })
-  )(CreateExercise)
+  graphql(CREATE_EXERCISE_MUTATION, { name: 'createExercise' })(CreateExercise)
 )
