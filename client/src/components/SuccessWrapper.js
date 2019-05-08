@@ -2,7 +2,7 @@ import React from 'react'
 
 export default props => (
   <div className='container'>
-    <div className='card blue-grey darken-1'>
+    <div className='card grey darken-3'>
       <div className='card-content white-text'>
         <span className='card-title'>Success!</span>
         {props.children}

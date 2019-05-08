@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 import PRoute from './components/ProtectedRoute'
 
 // Components
@@ -15,11 +15,11 @@ import AllWorkoutsCalendar from './pages/calendar/AllWorkoutsCalendar'
 import Signup from './pages/login_signup/Signup'
 import Signin from './pages/login_signup/Login'
 
-import Test from './pages/Test'
+// import Test from './pages/Test'
 
 export default () => (
-  <>
-    <Route path='/test' component={Test} />
+  <Switch>
+    {/* <Route path='/test' component={Test} /> */}
 
     <Route path='/signup' component={Signup} />
     <Route path='/signin' component={Signin} />
@@ -33,5 +33,6 @@ export default () => (
     <PRoute path='/create/set' component={CreateSet} />
     <PRoute exact path='/workouts' component={AllWorkouts} />
     <PRoute path='/workouts/calendar' component={AllWorkoutsCalendar} />
-  </>
+    <PRoute component={FrontPage} />
+  </Switch>
 )
